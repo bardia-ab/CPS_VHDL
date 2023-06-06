@@ -6,6 +6,7 @@ entity Toggle_Counter is
 	generic( g_Width	:	integer);
 	port(
 		i_Clk	:	in		std_logic;
+		i_CE	:	in		std_logic;
 		i_input	:	in		std_logic;
 		i_SCLR	:	in		std_logic;
 		o_Q		:	out		std_logic_vector(g_Width - 1 downto 0)
@@ -15,7 +16,6 @@ end entity;
 architecture behavioral of Toggle_Counter is
 
 	signal	r_input		:	std_logic;
-	signal	r_input_2	:	std_logic;
 	signal	r_SCLR		:	std_logic;
 	signal	r_Cntr		:	unsigned(g_Width - 1 downto 0)	:= (others => '0');
 
@@ -29,14 +29,12 @@ begin
 		
 			r_SCLR		<=	i_SCLR;
 			r_input		<=	i_input;
-			r_input_2	<=	r_input;
 			
 			if (r_SCLR = '1') then
 				r_Cntr		<=	(others => '0');
-				r_input_2	<=	i_input;
 				
 			else
-				if (i_input = r_input) then
+				if (i_input = r_input and i_CE = '1') then	-- USE i_CE for counting only Rising/Falling Transitions
 					r_Cntr	<=	r_Cntr + 1;
 					
 				end if;
