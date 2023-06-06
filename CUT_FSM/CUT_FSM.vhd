@@ -4,14 +4,17 @@ use ieee.numeric_std.all;
 ---------------------------------------
 entity CUT_FSM is
 	generic(
-		g_Counter_Width	:	integer
+		g_Counter_Width	:	integer;
+		g_Mode			:	std_logic_vector(1 downto 0)	-- 0X: All Trans.  10: Falling Trans.  11: Rising Trans.
 	);
 	port(
 		i_Clk		:	in		std_logic;
+		i_Reset		:	in		std_logic;
 		i_Start		:	in		std_logic;
 		i_Locked	:	in		std_logic;
 		i_Enable	:	in		std_logic;
 		o_CE_CUT	:	out		std_logic;
+		o_CE_Cntr	:	out		std_logic;
 		o_CLR_Cntr	:	out		std_logic;
 		o_Done		:	out		std_logic
 	);
@@ -24,9 +27,10 @@ architecture behavioral of CUT_FSM is
 	
 	--------------- Constants ---------------------	
 	constant c_Num_Samples	:	integer	:= 2 ** (g_Counter_Width);
+	constant c_Counter_Init	:	integer	:= c_Num_Samples - 1;
 
 	--------------- Counters ---------------------
-	signal	r_Sample_Cntr	:	unsigned(g_Counter_Width - 1 downto 0)	:= (others => '0');
+	signal	r_Sample_Cntr	:	unsigned(g_Counter_Width - 1 downto 0)	:= to_unsigned(c_Counter_Init, g_Counter_Width);
 
 	--------------- Internal Regs ---------------------
 	signal	r_State			:	t_my_state	:= s_Idle;
@@ -34,17 +38,25 @@ architecture behavioral of CUT_FSM is
 	signal	r_Locked		:	std_logic;
 	signal	r_Enable		:	std_logic;
 	signal	r_Enable_2		:	std_logic	:= '0';
+	signal	r_Even			:	std_logic	:= '0';
 	signal	r_CE_CUT		:	std_logic	:= '0';
+	signal	r_CE_Cntr		:	std_logic	:= '0';
 	signal	r_CLR_Cntr		:	std_logic	:= '0';
 	signal	r_Done			:	std_logic	:= '0';
 
 begin
 	
-	CUT_Control	:	process(i_Clk)
+	CUT_Control	:	process(i_Clk, i_Reset)
 	
 	begin
 	
-		if (i_Clk'event and i_Clk = '1') then
+		if (i_Reset = '1') then
+			r_State			<=	s_Idle;
+			r_CE_CUT		<=	'0';
+			r_CLR_Cntr		<=	'0';
+			r_Done			<=	'0';
+		
+		elsif (i_Clk'event and i_Clk = '1') then
 		
 			r_Start		<=	i_Start;		
 			r_Locked	<=	i_Locked;	
@@ -52,12 +64,11 @@ begin
 			r_Enable_2	<=	r_Enable;
 			------ Defaut ------
 			r_CLR_Cntr	<=	'0';
---			r_Done		<=	'0';
 		
 			case	r_State	is
 			
 			when	s_Idle		=>
-									if (r_Locked = '1' and r_Start = '1') then
+									if (r_Locked = '1' and r_Start = '1' and i_Start = '0') then
 										r_CE_CUT	<=	'1';
 										r_CLR_Cntr	<=	'1';
 										r_Done		<=	'0';
@@ -81,23 +92,56 @@ begin
 	
 	end process;
 	
-	Sample_Counter	:	process (i_Clk)
+	Sample_Counter	:	process (i_Clk, i_Reset)
 	
 	begin
 	
-		if (i_Clk'event and i_Clk = '1') then
+		if (i_Reset = '1') then
+			r_Sample_Cntr	<=	to_unsigned(c_Counter_Init, r_Sample_Cntr'length);
+		
+		elsif (i_Clk'event and i_Clk = '1') then
 		
 			if (r_State = s_Propagate) then
 				r_Sample_Cntr	<=	r_Sample_Cntr - 1;
 			else
-				r_Sample_Cntr	<=	to_unsigned(c_Num_Samples - 1, r_Sample_Cntr'length);
+				r_Sample_Cntr	<=	to_unsigned(c_Counter_Init, r_Sample_Cntr'length);
 			end if;
 		
 		end if;
 	
 	end process;
-
+	
+	Counter_CE	:	process(i_Clk, i_Reset)
+	
+	begin
+	
+		if (i_Reset = '1') then
+			r_CE_Cntr	<=	'0';
+		
+		elsif (i_Clk'event and i_Clk = '1') then
+		
+			if (r_State = s_Propagate) then
+					if (g_Mode(0) = '0') then
+						r_CE_Cntr	<= not r_Even;
+					else
+						r_CE_Cntr	<= r_Even;
+					end if;
+					
+				else
+					r_CE_Cntr		<=	'0';
+			end if;
+		
+		end if;
+	
+	end process;
+	
+	-- As Init value of FF = '0' and initial value of counter = c_Num_Samples - 1 then rising Trans. occurs when counter equals an even number
+	-- but CE_Cntr must be asserted in the previous cycle. So, when counter is odd, CE_Cnter must be asserted for rising Trans.
+	-- However, due to the pipline stage (sample FF -> Up_Counter), the up_counter must be enabled with 1 cycle delay, which is when counter is even for rising Trans.
+	r_Even		<=	'1' when (to_integer(r_Sample_Cntr) mod 2 = 0) else '0';
+	
 	o_CE_CUT	<=	r_CE_CUT;	
+	o_CE_Cntr	<=	r_CE_Cntr;
 	o_CLR_Cntr	<=	r_CLR_Cntr;	
     o_Done		<=	r_Done;
 	
