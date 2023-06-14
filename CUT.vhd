@@ -19,14 +19,7 @@ architecture behavioral of CUT is
 	signal	Q_sample_int	:	std_logic;
 	signal	D_launch_int	:	std_logic;
 	signal	D_capture_int	:	std_logic;
---	signal	Q_capture_int	:	std_logic;
---	signal	route_thru		:	std_logic;
-	
---	attribute ASYNC_REG : string;
---	attribute ASYNC_REG of capture_FF: label is "TRUE";
---	attribute ASYNC_REG of capture_FF2: label is "TRUE";
---	attribute dont_touch	:	string;
---	attribute dont_touch of buff	:	label is "True";
+
 
 begin
 
