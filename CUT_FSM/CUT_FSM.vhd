@@ -1,10 +1,12 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+use work.my_package.all;
 ---------------------------------------
 entity CUT_FSM is
 	generic(
 		g_Counter_Width	:	integer;
+		g_PipeLineStage	:	integer;
 		g_Mode			:	std_logic_vector(1 downto 0)	-- 0X: All Trans.  10: Falling Trans.  11: Rising Trans.
 	);
 	port(
@@ -23,17 +25,17 @@ end entity;
 architecture behavioral of CUT_FSM is
 
 	--------------- Types ---------------------
-	type t_my_state is (s_Idle, s_Propagate, s_Sample, s_Wait);
+	type t_my_state is (s_Start, s_Idle, s_Propagate, s_Sample, s_Wait);
 	
 	--------------- Constants ---------------------	
 	constant c_Num_Samples	:	integer	:= 2 ** (g_Counter_Width);
 	constant c_Counter_Init	:	integer	:= c_Num_Samples - 1;
 
 	--------------- Counters ---------------------
-	signal	r_Sample_Cntr	:	unsigned(g_Counter_Width - 1 downto 0)	:= to_unsigned(c_Counter_Init, g_Counter_Width);
-
+	signal	r_Sample_Cntr	:	unsigned(g_Counter_Width - 1 downto 0)			:= to_unsigned(c_Counter_Init, g_Counter_Width);
+	signal	r_PipeLine_Cntr	:	unsigned(get_log2(g_PipeLineStage) downto 0)	:= to_unsigned(g_PipeLineStage - 1, get_log2_size(g_PipeLineStage));
 	--------------- Internal Regs ---------------------
-	signal	r_State			:	t_my_state	:= s_Idle;
+	signal	r_State			:	t_my_state	:= s_Start;
 	signal	r_Start			:	std_logic;
 	signal	r_Locked		:	std_logic;
 	signal	r_Enable		:	std_logic;
@@ -51,7 +53,7 @@ begin
 	begin
 	
 		if (i_Reset = '1') then
-			r_State			<=	s_Idle;
+			r_State			<=	s_Start;
 			r_CE_CUT		<=	'0';
 			r_CLR_Cntr		<=	'0';
 			r_Done			<=	'0';
@@ -67,8 +69,13 @@ begin
 		
 			case	r_State	is
 			
+			when	s_Start		=>
+									if (r_Start = '1' and i_Start = '0') then
+										r_State		<=	s_Idle;
+									end if;
+			
 			when	s_Idle		=>
-									if (r_Locked = '1' and r_Start = '1' and i_Start = '0') then
+									if (r_Locked = '1') then
 										r_CE_CUT	<=	'1';
 										r_CLR_Cntr	<=	'1';
 										r_Done		<=	'0';
@@ -121,14 +128,20 @@ begin
 		elsif (i_Clk'event and i_Clk = '1') then
 		
 			if (r_State = s_Propagate) then
-					if (g_Mode(0) = '0') then
-						r_CE_Cntr	<= not r_Even;
+					if (r_PipeLine_Cntr = to_unsigned(0, r_PipeLine_Cntr'length)) then
+						if (g_Mode(1) = '0') then
+							r_CE_Cntr	<=	'1';
+						elsif (g_Mode(0) = '0') then
+							r_CE_Cntr	<= r_Even;
+						else
+							r_CE_Cntr	<= not r_Even;
+						end if;
 					else
-						r_CE_Cntr	<= r_Even;
+						r_PipeLine_Cntr	<=	r_PipeLine_Cntr - 1;
 					end if;
-					
-				else
-					r_CE_Cntr		<=	'0';
+			else
+				r_CE_Cntr		<=	'0';
+				r_PipeLine_Cntr	<=	to_unsigned(g_PipeLineStage - 1, r_PipeLine_Cntr'length);
 			end if;
 		
 		end if;
@@ -138,6 +151,7 @@ begin
 	-- As Init value of FF = '0' and initial value of counter = c_Num_Samples - 1 then rising Trans. occurs when counter equals an even number
 	-- but CE_Cntr must be asserted in the previous cycle. So, when counter is odd, CE_Cnter must be asserted for rising Trans.
 	-- However, due to the pipline stage (sample FF -> Up_Counter), the up_counter must be enabled with 1 cycle delay, which is when counter is even for rising Trans.
+	-- In case of adding another pipeline stage in sample clock, r_Even must be registered (with sample clock) and then is assigned to r_CE_Cntr
 	r_Even		<=	'1' when (to_integer(r_Sample_Cntr) mod 2 = 0) else '0';
 	
 	o_CE_CUT	<=	r_CE_CUT;	

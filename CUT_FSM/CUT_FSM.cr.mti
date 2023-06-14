@@ -7,7 +7,7 @@ Model Technology ModelSim SE-64 vcom 10.6d Compiler 2018.02 Feb 24 2018
 -- Compiling entity CUT_FSM
 -- Compiling architecture behavioral of CUT_FSM
 
-} {} {}} {C:/Users/t26607bb/OneDrive - The University of Manchester/CPS Project/VHDL Sources/CUT_FSM/CUT_FSM_tb.vhd} {0 {vcom -work work -2002 -explicit -vopt -stats=none {C:/Users/t26607bb/OneDrive - The University of Manchester/CPS Project/VHDL Sources/CUT_FSM/CUT_FSM_tb.vhd}
+} {} {}} {C:/Users/t26607bb/OneDrive - The University of Manchester/CPS Project/VHDL Sources/CUT_FSM/CUT_FSM_tb.vhd} {1 {vcom -work work -2002 -explicit -vopt -stats=none {C:/Users/t26607bb/OneDrive - The University of Manchester/CPS Project/VHDL Sources/CUT_FSM/CUT_FSM_tb.vhd}
 Model Technology ModelSim SE-64 vcom 10.6d Compiler 2018.02 Feb 24 2018
 -- Loading package STANDARD
 -- Loading package TEXTIO
@@ -16,28 +16,5 @@ Model Technology ModelSim SE-64 vcom 10.6d Compiler 2018.02 Feb 24 2018
 -- Compiling architecture rtl of CUT_FSM_tb
 -- Loading package NUMERIC_STD
 -- Loading entity CUT_FSM
-** Error: C:/Users/t26607bb/OneDrive - The University of Manchester/CPS Project/VHDL Sources/CUT_FSM/CUT_FSM_tb.vhd(25): (vcom-1136) Unknown identifier "g_Counter_Width".
-** Error: C:/Users/t26607bb/OneDrive - The University of Manchester/CPS Project/VHDL Sources/CUT_FSM/CUT_FSM_tb.vhd(26): (vcom-1136) Unknown identifier "g_Mode".
-** Error: C:/Users/t26607bb/OneDrive - The University of Manchester/CPS Project/VHDL Sources/CUT_FSM/CUT_FSM_tb.vhd(29): (vcom-1136) Unknown identifier "i_Clk".
-** Error: C:/Users/t26607bb/OneDrive - The University of Manchester/CPS Project/VHDL Sources/CUT_FSM/CUT_FSM_tb.vhd(30): (vcom-1136) Unknown identifier "i_Reset".
-** Error: C:/Users/t26607bb/OneDrive - The University of Manchester/CPS Project/VHDL Sources/CUT_FSM/CUT_FSM_tb.vhd(31): (vcom-1136) Unknown identifier "i_Start".
-** Error: C:/Users/t26607bb/OneDrive - The University of Manchester/CPS Project/VHDL Sources/CUT_FSM/CUT_FSM_tb.vhd(32): (vcom-1136) Unknown identifier "i_Locked".
-** Error: C:/Users/t26607bb/OneDrive - The University of Manchester/CPS Project/VHDL Sources/CUT_FSM/CUT_FSM_tb.vhd(33): (vcom-1136) Unknown identifier "i_Enable".
-** Error: C:/Users/t26607bb/OneDrive - The University of Manchester/CPS Project/VHDL Sources/CUT_FSM/CUT_FSM_tb.vhd(34): (vcom-1136) Unknown identifier "o_CE_CUT".
-** Error: C:/Users/t26607bb/OneDrive - The University of Manchester/CPS Project/VHDL Sources/CUT_FSM/CUT_FSM_tb.vhd(35): (vcom-1136) Unknown identifier "o_CE_Cntr".
-** Error: C:/Users/t26607bb/OneDrive - The University of Manchester/CPS Project/VHDL Sources/CUT_FSM/CUT_FSM_tb.vhd(36): (vcom-1136) Unknown identifier "o_CLR_Cntr".
-** Error: C:/Users/t26607bb/OneDrive - The University of Manchester/CPS Project/VHDL Sources/CUT_FSM/CUT_FSM_tb.vhd(37): (vcom-1136) Unknown identifier "o_Done".
-** Error: C:/Users/t26607bb/OneDrive - The University of Manchester/CPS Project/VHDL Sources/CUT_FSM/CUT_FSM_tb.vhd(25): Type error resolving infix expression "<=" as type std.STANDARD.INTEGER.
-** Error: C:/Users/t26607bb/OneDrive - The University of Manchester/CPS Project/VHDL Sources/CUT_FSM/CUT_FSM_tb.vhd(26): Type error resolving infix expression "<=" as type ieee.std_logic_1164.STD_LOGIC_VECTOR.
-** Error: C:/Users/t26607bb/OneDrive - The University of Manchester/CPS Project/VHDL Sources/CUT_FSM/CUT_FSM_tb.vhd(29): (vcom-1436) Actual expression (infix expression) of formal "i_Clk" is not globally static.
-** Error: C:/Users/t26607bb/OneDrive - The University of Manchester/CPS Project/VHDL Sources/CUT_FSM/CUT_FSM_tb.vhd(30): (vcom-1436) Actual expression (infix expression) of formal "i_Reset" is not globally static.
-** Error: C:/Users/t26607bb/OneDrive - The University of Manchester/CPS Project/VHDL Sources/CUT_FSM/CUT_FSM_tb.vhd(31): (vcom-1436) Actual expression (infix expression) of formal "i_Start" is not globally static.
-** Error: C:/Users/t26607bb/OneDrive - The University of Manchester/CPS Project/VHDL Sources/CUT_FSM/CUT_FSM_tb.vhd(32): (vcom-1436) Actual expression (infix expression) of formal "i_Locked" is not globally static.
-** Error: C:/Users/t26607bb/OneDrive - The University of Manchester/CPS Project/VHDL Sources/CUT_FSM/CUT_FSM_tb.vhd(33): (vcom-1436) Actual expression (infix expression) of formal "i_Enable" is not globally static.
-** Error: C:/Users/t26607bb/OneDrive - The University of Manchester/CPS Project/VHDL Sources/CUT_FSM/CUT_FSM_tb.vhd(34): (vcom-1454) Formal "o_CE_CUT" of mode OUT cannot be associated with an expression.
-** Error: C:/Users/t26607bb/OneDrive - The University of Manchester/CPS Project/VHDL Sources/CUT_FSM/CUT_FSM_tb.vhd(35): (vcom-1454) Formal "o_CE_Cntr" of mode OUT cannot be associated with an expression.
-** Error: C:/Users/t26607bb/OneDrive - The University of Manchester/CPS Project/VHDL Sources/CUT_FSM/CUT_FSM_tb.vhd(36): (vcom-1454) Formal "o_CLR_Cntr" of mode OUT cannot be associated with an expression.
-** Error: C:/Users/t26607bb/OneDrive - The University of Manchester/CPS Project/VHDL Sources/CUT_FSM/CUT_FSM_tb.vhd(37): (vcom-1454) Formal "o_Done" of mode OUT cannot be associated with an expression.
-** Error: C:/Users/t26607bb/OneDrive - The University of Manchester/CPS Project/VHDL Sources/CUT_FSM/CUT_FSM_tb.vhd(45): VHDL Compiler exiting
 
-} {10.0 33.0} {}}
+} {} {}}
