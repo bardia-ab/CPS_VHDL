@@ -6,6 +6,7 @@ entity ILA_Capture is
 	generic (g_Counter_Width	:	integer);
 	port(
 		i_Clk			:	in		std_logic;
+		i_Sys_Reset			:	in		std_logic;
 		i_Enable		:	in		std_logic;
 		i_Reset			:	in		std_logic;
 		i_Error_Cntr	:	in		std_logic_vector(g_Counter_Width-1 downto 0);
@@ -16,7 +17,7 @@ end entity;
 architecture behavioral of ILA_Capture is
 
 	--------------- Types ---------------------
-	type t_my_state is (s0, s1, s2, s3, s4);
+	-- type t_my_state is (s0, s1, s2, s3, s4);
 	
 	--------------- Internal Regs ---------------------
 --	signal	r_state			:	t_my_state	:= s0;
@@ -31,22 +32,19 @@ architecture behavioral of ILA_Capture is
 	constant	c_Zero		:	std_logic_vector(g_Counter_Width-1 downto 0)	:=	std_logic_vector(to_unsigned(0, g_Counter_Width));
 	constant	c_Max		:	std_logic_vector(g_Counter_Width-1 downto 0)	:=	std_logic_vector(to_unsigned(2**g_Counter_Width-1, g_Counter_Width));
 	
---	attribute	mark_debug	:	string;
---	attribute	mark_debug of r_State	:	signal is "True";
 
 begin
 
-	process(i_Clk, i_Reset)
+	process(i_Clk, i_Reset, i_Sys_Reset)
 	
 	begin
 	
-		if (i_Reset = '1') then
+		if (i_Reset = '1' or i_Sys_Reset = '1') then
 			r_State		<=	"00";
 			
 		elsif (i_Clk'event and i_Clk = '1') then
 			
 			r_Enable	<=	i_Enable;
---			r_Capture	<=	'0';
 			
 			if (r_Enable = '0' and i_Enable = '1') then
 				r_Capture		<=	'0';
@@ -86,8 +84,6 @@ begin
 	
 	end process;
 
---	w_MSB		<=	i_Error_Cntr(g_Counter_Width-1);
---	r_MSB		<=	r_Error_Cntr(g_Counter_Width-1);
 	o_Capture	<=	r_Capture;
 
 end architecture;
