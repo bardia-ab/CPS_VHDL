@@ -4,6 +4,7 @@ use ieee.std_logic_1164.all;
 entity CM_FSM is
 	port(
 		i_Clk		:	in		std_logic;
+		i_Reset		:	in		std_logic;
 		i_Enable	:	in		std_logic;
 		i_Psdone	:	in		std_logic;
 		o_Psen		:	out		std_logic;
@@ -26,18 +27,20 @@ architecture behavioral of CM_FSM is
 
 begin
 
-	CM_FSM	:	process(i_Clk)
+	CM_FSM	:	process(i_Clk, i_Reset)
 	
 	begin
 	
-		if (i_Clk'event and i_Clk = '1') then
+		if (i_Reset = '1') then
+			r_State			<=	s_Shift;
+		
+		elsif (i_Clk'event and i_Clk = '1') then
 		
 			r_Enable	<=	i_Enable;
 			r_Enable_2	<=	r_Enable;
 			r_Psdone	<=	i_Psdone;
 			----------- Default --------------
 			r_Psen	<=	'0';
---			r_Done	<=	'0';
 			
 			case r_State is
 			
