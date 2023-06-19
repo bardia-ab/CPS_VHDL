@@ -8,7 +8,6 @@ package my_package is
 	type my_array3 is array (integer range <>) of std_logic_vector;
 	
    function get_log2 (input  :   integer) return integer; 
-   function get_log2_size (input  :   integer) return integer;
    function or_reduce( V: std_logic_vector )
                 return std_ulogic;
    function xor_reduce( V: std_logic_vector )
@@ -21,18 +20,9 @@ package body my_package is
 	
 	function get_log2 (input    :   integer) return integer is
 	begin
-	   return integer(ceil(log2(real(input))));
+	   return integer(floor(log2(real(input))));
 	end get_log2;
-	
-	function get_log2_size (input    :   integer) return integer is
-	begin
-		if (input = 1) then
-			return 1;
-		else
-			return integer(ceil(log2(real(input))));
-		end if;
-	end get_log2_size;
-	
+		
 	function or_reduce( V: std_logic_vector )
                 return std_ulogic is
       variable result: std_ulogic;
