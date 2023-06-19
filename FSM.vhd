@@ -32,8 +32,8 @@ entity FSM is
 		o_CE_CUT		:	out		std_logic;
 		o_CE_Cntr		:	out		std_logic;
 		o_CLR_Cntr		:	out		std_logic;
-		o_Shift_Value	:	out		std_logic_vector(get_log2(56 * g_O2 * g_N_Sets) - 1 downto 0);
-		o_Slct_Mux		:	out		std_logic_vector(get_log2(g_N_Segments+1) - 1 downto 0);
+		o_Shift_Value	:	out		std_logic_vector(get_log2(56 * g_O2 * g_N_Sets) downto 0);
+		o_Slct_Mux		:	out		std_logic_vector(get_log2(g_N_Segments) downto 0);
 		o_LED1			:	out		std_logic;
 		o_LED2			:	out		std_logic
 	);
@@ -73,8 +73,8 @@ architecture behavioral of FSM is
 	constant	c_N_Shifts	:	integer	:= 56 * g_O2 * g_N_Sets;
 	
 	--------------- Counters ---------------------
-	signal	r_Shift_Cntr	:	unsigned(get_log2(c_N_Shifts) - 1 downto 0) 	:= to_unsigned(c_N_Shifts - 1, get_log2(c_N_Shifts));
-	signal 	r_Segment_Cntr  :   unsigned(get_log2(g_N_Segments+1) - 1 downto 0)   := to_unsigned(0, get_log2(g_N_Segments+1));
+	signal	r_Shift_Cntr	:	unsigned(get_log2(c_N_Shifts) downto 0) 	:= to_unsigned(c_N_Shifts - 1, get_log2(c_N_Shifts) + 1);
+	signal 	r_Segment_Cntr  :   unsigned(get_log2(g_N_Segments) downto 0)   := to_unsigned(0, get_log2(g_N_Segments) + 1);
 	
 	--------------- Internal Regs ---------------------
 	signal	w_Enable_CUT	:	std_logic	:= '0';
