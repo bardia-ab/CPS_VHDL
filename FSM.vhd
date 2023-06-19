@@ -8,7 +8,9 @@ entity FSM is
 		g_O2			:	integer;
 		g_Counter_Width	:	integer;
 		g_N_Sets		:	integer;
-		g_N_Segments	:	integer
+		g_N_Segments	:	integer;
+		g_PipeLineStage	:	integer;
+		g_Mode			:	std_logic_vector(1 downto 0)
 	);
 	port(
 		i_Clk_Launch	:	in		std_logic;
@@ -43,7 +45,9 @@ architecture behavioral of FSM is
 
 	component CUT_FSM
 		generic(
-			g_Counter_Width	:	integer
+			g_Counter_Width	:	integer;
+			g_PipeLineStage	:	integer;
+			g_Mode			:	std_logic_vector(1 downto 0)	-- 0X: All Trans.  10: Falling Trans.  11: Rising Trans.
 		);
 		port(
 			i_Clk		:	in		std_logic; 
@@ -94,7 +98,10 @@ architecture behavioral of FSM is
 begin
 		
 	CUT_FSM_Inst	:	CUT_FSM
-		generic map(g_Counter_Width => g_Counter_Width)
+		generic map(g_Counter_Width => g_Counter_Width,
+					g_PipeLineStage => g_PipeLineStage,
+					g_Mode			=> g_Mode
+		)
 		port map(
 			i_Clk		=>	i_Clk_Launch,
 			i_Reset		=>	i_Reset,
