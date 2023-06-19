@@ -33,7 +33,7 @@ architecture behavioral of CUT_FSM is
 
 	--------------- Counters ---------------------
 	signal	r_Sample_Cntr	:	unsigned(g_Counter_Width - 1 downto 0)			:= to_unsigned(c_Counter_Init, g_Counter_Width);
-	signal	r_PipeLine_Cntr	:	unsigned(get_log2(g_PipeLineStage) downto 0)	:= to_unsigned(g_PipeLineStage - 1, get_log2_size(g_PipeLineStage));
+	signal	r_PipeLine_Cntr	:	unsigned(get_log2(g_PipeLineStage) downto 0)	:= to_unsigned(g_PipeLineStage - 1, get_log2(g_PipeLineStage) + 1);
 	--------------- Internal Regs ---------------------
 	signal	r_State			:	t_my_state	:= s_Start;
 	signal	r_Start			:	std_logic;
