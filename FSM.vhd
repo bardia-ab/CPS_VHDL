@@ -136,6 +136,7 @@ begin
 	)
 	port map(
 		i_Clk_Launch	=>	i_Clk_Launch,
+		i_Reset			=>	i_Reset,
 		i_Psclk1		=>	i_Psclk1,
 		i_Psclk2		=>	i_Psclk2,
 		i_Locked1		=>	i_Locked1,

@@ -11,6 +11,7 @@ entity FSM_Controller_Inc is
 	);
 	port(
 		i_Clk_Launch	:	in		std_logic;
+		i_Reset			:	in		std_logic;
 		i_Psclk1		:	in		std_logic;
 		i_Psclk2		:	in		std_logic;
 		i_Locked1		:	in		std_logic;
@@ -27,8 +28,8 @@ entity FSM_Controller_Inc is
 		o_En_CUT		:	out		std_logic;
 		o_En_CM1		:	out		std_logic;
 		o_En_CM2		:	out		std_logic;
-		o_Shift_Value	:	out		std_logic_vector(get_log2(56 * g_O2 * g_N_Sets) - 1 downto 0);
-		o_Slct_Mux		:	out		std_logic_vector(get_log2(g_N_Segments + 1) - 1 downto 0);
+		o_Shift_Value	:	out		std_logic_vector(get_log2(56 * g_O2 * g_N_Sets) downto 0);
+		o_Slct_Mux		:	out		std_logic_vector(get_log2(g_N_Segments) downto 0);
 		o_LED1			:	out		std_logic;
 		o_LED2			:	out		std_logic
 	);
@@ -43,8 +44,8 @@ architecture behavioral of FSM_Controller_Inc is
 	type t_my_type is (s_Shift, s_Reset, s_Enable_CUT);
 	signal	r_State	:	t_my_type	:= s_Shift;
 	--------------- Counters ---------------------
-	signal	r_Shift_Cntr	:	unsigned(get_log2(c_N_Shifts) - 1 downto 0) 	:= to_unsigned(c_N_Shifts, get_log2(c_N_Shifts));
-	signal 	r_Segment_Cntr  :   unsigned(get_log2(g_N_Segments+1) - 1 downto 0) := to_unsigned(0, get_log2(g_N_Segments+1));
+	signal	r_Shift_Cntr	:	unsigned(get_log2(c_N_Shifts) downto 0) 	:= to_unsigned(c_N_Shifts, get_log2(c_N_Shifts) + 1);
+	signal 	r_Segment_Cntr  :   unsigned(get_log2(g_N_Segments) downto 0) := to_unsigned(0, get_log2(g_N_Segments) + 1);
 
 	--------------- Internal Regs ---------------------
 	signal	r_Done_CM1	:	std_logic;
@@ -69,11 +70,16 @@ begin
 			o_Result	=>	r_Done_CM1
 		);
 		
-	process(i_Psclk1)
+	process(i_Psclk1, i_Reset)
 	
 	begin
 	
-		if (i_Psclk1'event and i_Psclk1 = '1') then
+		if (i_Reset = '1') then
+			r_State			<=	s_Shift;
+			r_Shift_Cntr	<=	to_unsigned(c_N_Shifts, r_Shift_Cntr'length);
+			r_Segment_Cntr	<=	to_unsigned(0, r_Segment_Cntr'length);
+		
+		elsif (i_Psclk1'event and i_Psclk1 = '1') then
 			
 			----- Default -----
 			r_Reset1	<=	'0';
