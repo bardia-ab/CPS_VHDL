@@ -28,7 +28,7 @@ architecture behavioral of CUT_FSM is
 	type t_my_state is (s_Start, s_Idle, s_Propagate, s_Sample, s_Wait);
 	
 	--------------- Constants ---------------------	
-	constant c_Num_Samples	:	integer	:= 2 ** (g_Counter_Width);
+	constant c_Num_Samples	:	integer	:= 2 ** (g_Counter_Width + to_integer(unsigned(i_Mode(1 downto 1))));
 	constant c_Counter_Init	:	integer	:= c_Num_Samples - 1;
 
 	--------------- Counters ---------------------
