@@ -6,8 +6,7 @@ use work.my_package.all;
 entity CUT_FSM is
 	generic(
 		g_Counter_Width	:	integer;
-		g_PipeLineStage	:	integer;
-		g_Mode			:	std_logic_vector(1 downto 0)	-- 0X: All Trans.  10: Falling Trans.  11: Rising Trans.
+		g_PipeLineStage	:	integer
 	);
 	port(
 		i_Clk		:	in		std_logic;
@@ -15,6 +14,7 @@ entity CUT_FSM is
 		i_Start		:	in		std_logic;
 		i_Locked	:	in		std_logic;
 		i_Enable	:	in		std_logic;
+		i_Mode		:	in		std_logic_vector(1 downto 0);	-- 0X: All Trans.  10: Falling Trans.  11: Rising Trans.
 		o_CE_CUT	:	out		std_logic;
 		o_CE_Cntr	:	out		std_logic;
 		o_CLR_Cntr	:	out		std_logic;
@@ -45,6 +45,11 @@ architecture behavioral of CUT_FSM is
 	signal	r_CE_Cntr		:	std_logic	:= '0';
 	signal	r_CLR_Cntr		:	std_logic	:= '0';
 	signal	r_Done			:	std_logic	:= '0';
+	
+	attribute mark_debug	:	string;
+	attribute mark_debug of r_CE_CUT	:	signal is "True";
+	attribute mark_debug of r_CE_Cntr	:	signal is "True";
+	attribute mark_debug of r_Enable	:	signal is "True";
 
 begin
 	
@@ -70,7 +75,7 @@ begin
 			case	r_State	is
 			
 			when	s_Start		=>
-									if (r_Start = '1' and i_Start = '0') then
+									if (r_Start = '0' and i_Start = '1') then
 										r_State		<=	s_Idle;
 									end if;
 			
@@ -129,9 +134,9 @@ begin
 		
 			if (r_State = s_Propagate) then
 					if (r_PipeLine_Cntr = to_unsigned(0, r_PipeLine_Cntr'length)) then
-						if (g_Mode(1) = '0') then
+						if (i_Mode(1) = '0') then
 							r_CE_Cntr	<=	'1';
-						elsif (g_Mode(0) = '0') then
+						elsif (i_Mode(0) = '0') then
 							r_CE_Cntr	<= r_Even;
 						else
 							r_CE_Cntr	<= not r_Even;

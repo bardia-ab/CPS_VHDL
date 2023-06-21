@@ -9,8 +9,7 @@ entity FSM is
 		g_Counter_Width	:	integer;
 		g_N_Sets		:	integer;
 		g_N_Segments	:	integer;
-		g_PipeLineStage	:	integer;
-		g_Mode			:	std_logic_vector(1 downto 0)
+		g_PipeLineStage	:	integer
 	);
 	port(
 		i_Clk_Launch	:	in		std_logic;
@@ -23,6 +22,7 @@ entity FSM is
 		i_Locked3		:	in		std_logic;
 		i_Psdone1		:	in		std_logic;
 		i_Psdone2		:	in		std_logic;
+		i_Mode			:	in		std_logic_vector(1 downto 0);
 		o_Trigger		:	out		std_logic;
 		o_Psen1			:	out		std_logic;
 		o_Psen2			:	out		std_logic;
@@ -46,8 +46,7 @@ architecture behavioral of FSM is
 	component CUT_FSM
 		generic(
 			g_Counter_Width	:	integer;
-			g_PipeLineStage	:	integer;
-			g_Mode			:	std_logic_vector(1 downto 0)	-- 0X: All Trans.  10: Falling Trans.  11: Rising Trans.
+			g_PipeLineStage	:	integer
 		);
 		port(
 			i_Clk		:	in		std_logic; 
@@ -55,6 +54,7 @@ architecture behavioral of FSM is
 			i_Start		:	in		std_logic; 
 			i_Locked	:	in		std_logic; 
 			i_Enable	:	in		std_logic; 
+			i_Mode		:	in		std_logic_vector(1 downto 0);
 			o_CE_CUT	:	out		std_logic; 
 			o_CE_Cntr	:	out		std_logic; 
 			o_CLR_Cntr	:	out		std_logic; 
@@ -99,8 +99,7 @@ begin
 		
 	CUT_FSM_Inst	:	CUT_FSM
 		generic map(g_Counter_Width => g_Counter_Width,
-					g_PipeLineStage => g_PipeLineStage,
-					g_Mode			=> g_Mode
+					g_PipeLineStage => g_PipeLineStage
 		)
 		port map(
 			i_Clk		=>	i_Clk_Launch,
@@ -108,6 +107,7 @@ begin
 		    i_Start		=>	i_Start,		
 		    i_Locked	=>	r_Locked,	
 		    i_Enable	=>	r_En_CUT,	
+		    i_Mode		=>	i_Mode,
 		    o_CE_CUT	=>	o_CE_CUT,	
 			o_CE_Cntr	=>	o_CE_Cntr,
 		    o_CLR_Cntr	=>	o_CLR_Cntr,	
