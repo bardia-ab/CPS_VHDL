@@ -78,6 +78,8 @@ begin
 			r_State			<=	s_Shift;
 			r_Shift_Cntr	<=	to_unsigned(c_N_Shifts, r_Shift_Cntr'length);
 			r_Segment_Cntr	<=	to_unsigned(0, r_Segment_Cntr'length);
+			r_LED1			<=	'0';
+			r_LED2			<=	'0';
 		
 		elsif (i_Psclk1'event and i_Psclk1 = '1') then
 			
