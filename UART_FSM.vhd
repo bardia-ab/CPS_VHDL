@@ -4,14 +4,8 @@ use ieee.numeric_std.all;
 use ieee.math_real.all;
 ----------------------------------
 entity UART_FSM is
---	generic(
---		g_Shift_Value_Length	:	integer	:= 14;
---		g_Capture_Length		:	integer	:= 50
---	);
 	port(
 		i_Clk			:	in		std_logic;
---		i_Shift_Value	:	in		std_logic_vector(g_Shift_Value_Length-1 downto 0);
---		i_Capture		:	in		std_logic_vector(g_Capture_Length-1 downto 0);
 		i_Data_in		:	in		std_logic_vector;
 		i_Enable		:	in		std_logic;
 		i_Busy			:	in		std_logic;
@@ -25,7 +19,6 @@ architecture behavioral of UART_FSM	is
 
 	
 	------------------ Constants ---------------------------
---	constant	c_Num_Bytes	:	integer	:=	integer(ceil(real(g_Shift_Value_Length + g_Capture_Length) / 8.0));
 	constant	c_Num_Bytes	:	integer	:=	integer(ceil(real(i_Data_in'length) / 8.0));
 	------------------ Counters ---------------------------
 	signal	r_Cntr			:	integer range 0 to c_Num_Bytes	:= c_Num_Bytes;

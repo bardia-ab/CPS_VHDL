@@ -21,21 +21,22 @@ architecture rtl of CUT_FSM_tb is
 	signal	Done		:	std_logic;
 	signal	Error		:	std_logic;
 	signal	Cntr_Out	:	std_logic_vector(cntr_width - 1 downto 0);
+	signal	Mode		:	std_logic_vector(1 downto 0)	:= "10";
 
 begin
 
-	CUT_DSM_Inst	:	entity work.CUT_FSM
+	CUT_FSM_Inst	:	entity work.CUT_FSM
 		generic map(
 			g_Counter_Width	=>	cntr_width,	
-			g_PipeLineStage	=>	1,
-			g_Mode			=>	"00"
-		)
+			g_PipeLineStage	=>	1	)
 		port map(
-			i_Clk			=>	clk_launch,
+			i_Clk_Launch	=>	clk_launch,
+			i_Clk_Sample	=>	clk_sample,
 		    i_Reset			=>	reset,
 		    i_Start			=>	start,
 		    i_Locked		=>	locked,
 		    i_Enable		=>	enable,
+		    i_Mode			=>	Mode,
 		    o_CE_CUT		=>	CE_CUT,
 		    o_CE_Cntr		=>	CE_Cntr,
 		    o_CLR_Cntr		=>	CLR_Cntr,
@@ -58,6 +59,7 @@ begin
 		    i_CE	        =>	CE_Cntr,
 		    i_input	        =>	Error,
 		    i_SCLR	        =>	CLR_Cntr,
+		    i_Mode			=>	Mode,
 		    o_Q		        =>	Cntr_Out
 		);
 	

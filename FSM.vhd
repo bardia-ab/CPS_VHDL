@@ -13,6 +13,7 @@ entity FSM is
 	);
 	port(
 		i_Clk_Launch	:	in		std_logic;
+		i_Clk_Sample	:	in		std_logic;
 		i_Psclk1		:	in		std_logic;
 		i_Psclk2		:	in		std_logic;
 		i_Start			:	in		std_logic;
@@ -49,16 +50,17 @@ architecture behavioral of FSM is
 			g_PipeLineStage	:	integer
 		);
 		port(
-			i_Clk		:	in		std_logic; 
-			i_Reset		:	in		std_logic; 
-			i_Start		:	in		std_logic; 
-			i_Locked	:	in		std_logic; 
-			i_Enable	:	in		std_logic; 
-			i_Mode		:	in		std_logic_vector(1 downto 0);
-			o_CE_CUT	:	out		std_logic; 
-			o_CE_Cntr	:	out		std_logic; 
-			o_CLR_Cntr	:	out		std_logic; 
-			o_Done		:	out		std_logic 
+			i_Clk_Launch	:	in		std_logic;
+			i_Clk_Sample	:	in		std_logic;  
+			i_Reset			:	in		std_logic; 
+			i_Start			:	in		std_logic; 
+			i_Locked		:	in		std_logic; 
+			i_Enable		:	in		std_logic; 
+			i_Mode			:	in		std_logic_vector(1 downto 0);
+			o_CE_CUT		:	out		std_logic; 
+			o_CE_Cntr		:	out		std_logic; 
+			o_CLR_Cntr		:	out		std_logic; 
+			o_Done			:	out		std_logic 
 		);
 	end component;
 		
@@ -102,16 +104,17 @@ begin
 					g_PipeLineStage => g_PipeLineStage
 		)
 		port map(
-			i_Clk		=>	i_Clk_Launch,
-			i_Reset		=>	i_Reset,
-		    i_Start		=>	i_Start,		
-		    i_Locked	=>	r_Locked,	
-		    i_Enable	=>	r_En_CUT,	
-		    i_Mode		=>	i_Mode,
-		    o_CE_CUT	=>	o_CE_CUT,	
-			o_CE_Cntr	=>	o_CE_Cntr,
-		    o_CLR_Cntr	=>	o_CLR_Cntr,	
-		    o_Done		=>	r_Done_CUT		
+			i_Clk_Launch	=>	i_Clk_Launch,
+			i_Clk_Sample	=>	i_Clk_Sample,
+			i_Reset			=>	i_Reset,
+		    i_Start			=>	i_Start,		
+		    i_Locked		=>	r_Locked,	
+		    i_Enable		=>	r_En_CUT,	
+		    i_Mode			=>	i_Mode,
+		    o_CE_CUT		=>	o_CE_CUT,	
+			o_CE_Cntr		=>	o_CE_Cntr,
+		    o_CLR_Cntr		=>	o_CLR_Cntr,	
+		    o_Done			=>	r_Done_CUT		
 		);
 		
 	CM1_FSM_Inst	:	CM_FSM
