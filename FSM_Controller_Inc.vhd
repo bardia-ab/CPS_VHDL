@@ -66,6 +66,7 @@ begin
 		generic map( g_Rising_Edge => '1')
 		port map(
 			i_Clk		=>	i_Psclk1,
+			i_Reset		=>	i_Reset,
 			i_Sig		=>	i_Done_CM1,
 			o_Result	=>	r_Done_CM1
 		);
