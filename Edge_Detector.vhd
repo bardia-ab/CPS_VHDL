@@ -7,6 +7,7 @@ entity Edge_Detector is
 	);
 	port(
 		i_Clk		:	in		std_logic;
+		i_Reset		:	in		std_logic;
 		i_Sig		:	in		std_logic;
 		O_Result	:	out		std_logic
 	);
@@ -21,11 +22,14 @@ architecture behavioral of Edge_Detector is
 
 begin
 
-	process(i_Clk)
+	process(i_Clk, i_Reset)
 	
 	begin
 	
-		if (i_Clk'event and i_Clk = '1') then
+		if (i_Reset = '1') then
+			r_Result	<=	'0';
+			
+		elsif (i_Clk'event and i_Clk = '1') then
 		
 			r_Sig		<=	i_Sig;
 			r_Result	<=	'0';
