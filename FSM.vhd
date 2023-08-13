@@ -9,6 +9,7 @@ entity FSM is
 		g_Counter_Width	:	integer;
 		g_N_Sets		:	integer;
 		g_N_Segments	:	integer;
+		g_N_Partial		:	integer;
 		g_PipeLineStage	:	integer
 	);
 	port(
@@ -44,37 +45,6 @@ end entity;
 -----------------------------------
 architecture behavioral of FSM is
 
-	component CUT_FSM
-		generic(
-			g_Counter_Width	:	integer;
-			g_PipeLineStage	:	integer
-		);
-		port(
-			i_Clk_Launch	:	in		std_logic;
-			i_Clk_Sample	:	in		std_logic;  
-			i_Reset			:	in		std_logic; 
-			i_Start			:	in		std_logic; 
-			i_Locked		:	in		std_logic; 
-			i_Enable		:	in		std_logic; 
-			i_Mode			:	in		std_logic_vector(1 downto 0);
-			o_CE_CUT		:	out		std_logic; 
-			o_CE_Cntr		:	out		std_logic; 
-			o_CLR_Cntr		:	out		std_logic; 
-			o_Done			:	out		std_logic 
-		);
-	end component;
-		
-	component CM_FSM
-		port(
-			i_Clk		:	in		std_logic;
-			i_Reset		:	in		std_logic;
-			i_Enable	:	in		std_logic;
-			i_Psdone	:	in		std_logic;
-			o_Psen		:	out		std_logic;
-			o_Done		:	out		std_logic
-		);
-	end component;
-
 	--------------- Constants ---------------------	
 	constant	c_N_Shifts	:	integer	:= 56 * g_O2 * g_N_Sets;
 	
@@ -99,7 +69,7 @@ architecture behavioral of FSM is
 	
 begin
 		
-	CUT_FSM_Inst	:	CUT_FSM
+	CUT_FSM_Inst	:	entity work.CUT_FSM
 		generic map(g_Counter_Width => g_Counter_Width,
 					g_PipeLineStage => g_PipeLineStage
 		)
@@ -117,7 +87,7 @@ begin
 		    o_Done			=>	r_Done_CUT		
 		);
 		
-	CM1_FSM_Inst	:	CM_FSM
+	CM1_FSM_Inst	:	entity work.CM_FSM
 		port map(
 			i_Clk		=>	i_Psclk1,
 			i_Reset		=>	i_Reset,
@@ -127,7 +97,7 @@ begin
 			o_Done		=>	r_Done_CM1
 		);
 	
-	CM2_FSM_Inst	:	CM_FSM
+	CM2_FSM_Inst	:	entity work.CM_FSM
 		port map(
 			i_Clk		=>	i_Psclk2,
 			i_Reset		=>	i_Reset,
@@ -142,13 +112,12 @@ begin
 		generic map(
 		g_O2			=>	g_O2,
 		g_N_Sets		=>	g_N_Sets,
-		g_N_Segments	=>	g_N_Segments
+		g_N_Segments	=>	g_N_Segments,
+		g_N_Partial		=>	g_N_Partial
 	)
 	port map(
-		i_Clk_Launch	=>	i_Clk_Launch,
 		i_Reset			=>	i_Reset,
 		i_Psclk1		=>	i_Psclk1,
-		i_Psclk2		=>	i_Psclk2,
 		i_Locked1		=>	i_Locked1,
 		i_Locked2		=>	i_Locked2,
 		i_Locked3		=>	i_Locked3,

@@ -5,7 +5,7 @@ use work.my_package.all;
 -------------------------------
 entity Mux is
 	port(
-		i_Input		:	in		my_array3;
+		i_Input		:	in		my_array;
 		i_SLCT		:	in		std_logic_vector;
 		o_Output	:	out		std_logic_vector
 	);

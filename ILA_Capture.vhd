@@ -6,7 +6,7 @@ entity ILA_Capture is
 	generic (g_Counter_Width	:	integer);
 	port(
 		i_Clk			:	in		std_logic;
-		i_Sys_Reset			:	in		std_logic;
+		i_Sys_Reset		:	in		std_logic;
 		i_Enable		:	in		std_logic;
 		i_Reset			:	in		std_logic;
 		i_Error_Cntr	:	in		std_logic_vector(g_Counter_Width-1 downto 0);

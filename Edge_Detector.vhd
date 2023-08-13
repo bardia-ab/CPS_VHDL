@@ -27,7 +27,7 @@ begin
 	begin
 	
 		if (i_Reset = '1') then
-			r_Result	<=	'0';
+			r_Result	<=	w_Level_Prv;
 			
 		elsif (i_Clk'event and i_Clk = '1') then
 		

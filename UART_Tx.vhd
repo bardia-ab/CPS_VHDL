@@ -2,7 +2,7 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 use	IEEE.math_real.all;
-use work.my_package.all;
+use IEEE.std_logic_misc.all;
 -----------------------------------------
 entity UART_Tx is
 	generic(

@@ -5,14 +5,10 @@ use ieee.math_real.all;
 ---------------------------------
 package my_package is
 
-	type my_array3 is array (integer range <>) of std_logic_vector;
+	type my_array is array (integer range <>) of std_logic_vector;
 	
    function get_log2 (input  :   integer) return integer; 
-   function or_reduce( V: std_logic_vector )
-                return std_ulogic;
-   function xor_reduce( V: std_logic_vector )
-                return std_ulogic;	
-    function cal_segment(n_full	:	integer;
+   function cal_segment(n_full	:	integer;
     					n_partial	:	integer) return integer;	
 end package;
 ---------------------------------
@@ -20,38 +16,13 @@ package body my_package is
 	
 	function get_log2 (input    :   integer) return integer is
 	begin
-	   return integer(floor(log2(real(input))));
+		if input > 1 then
+	   		return integer(floor(log2(real(input - 1))));
+		else
+			return 0;
+		end if;		
 	end get_log2;
 		
-	function or_reduce( V: std_logic_vector )
-                return std_ulogic is
-      variable result: std_ulogic;
-    begin
-      for i in V'range loop
-        if i = V'left then
-          result := V(i);
-        else
-          result := result OR V(i);
-        end if;
-        exit when result = '1';
-      end loop;
-      return result;
-    end or_reduce;
-		
-	function xor_reduce( V: std_logic_vector )
-                return std_ulogic is
-      variable result: std_ulogic;
-    begin
-      for i in V'range loop
-        if i = V'left then
-          result := V(i);
-        else
-          result := result xor V(i);
-        end if;
-      end loop;
-      return result;
-    end xor_reduce;
-
 	function cal_segment(n_full	:	integer;
     					n_partial	:	integer) return integer is
 	begin

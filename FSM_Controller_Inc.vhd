@@ -7,13 +7,12 @@ entity FSM_Controller_Inc is
 	generic(
 		g_O2			:	integer;
 		g_N_Sets		:	integer;
-		g_N_Segments	:	integer
+		g_N_Segments	:	integer;
+		g_N_Partial		:	integer
 	);
 	port(
-		i_Clk_Launch	:	in		std_logic;
 		i_Reset			:	in		std_logic;
 		i_Psclk1		:	in		std_logic;
-		i_Psclk2		:	in		std_logic;
 		i_Locked1		:	in		std_logic;
 		i_Locked2		:	in		std_logic;
 		i_Locked3		:	in		std_logic;
@@ -39,13 +38,12 @@ architecture behavioral of FSM_Controller_Inc is
 
 	--------------- Constants ---------------------	
 	constant	c_N_Shifts	:	integer	:= 56 * g_O2 * g_N_Sets;
-	
 	--------------- States ---------------------
 	type t_my_type is (s_Shift, s_Reset, s_Enable_CUT);
 	signal	r_State	:	t_my_type	:= s_Shift;
 	--------------- Counters ---------------------
 	signal	r_Shift_Cntr	:	unsigned(get_log2(c_N_Shifts) downto 0) 	:= to_unsigned(c_N_Shifts, get_log2(c_N_Shifts) + 1);
-	signal 	r_Segment_Cntr  :   unsigned(get_log2(g_N_Segments) downto 0) := to_unsigned(0, get_log2(g_N_Segments) + 1);
+	signal 	r_Segment_Cntr  :   unsigned(get_log2(g_N_Segments) downto 0) 	:= to_unsigned(0, get_log2(g_N_Segments) + 1);
 
 	--------------- Internal Regs ---------------------
 	signal	r_Done_CM1	:	std_logic;

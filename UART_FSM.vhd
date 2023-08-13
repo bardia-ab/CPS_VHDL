@@ -11,6 +11,7 @@ entity UART_FSM is
 		i_Busy			:	in		std_logic;
 		o_Send			:	out 	std_logic;
 		o_Data_Out		:	out		std_logic_vector(7 downto 0);
+		o_Busy			:	out		std_logic;
 		o_Done			:	out		std_logic
 	);
 end entity;
@@ -32,6 +33,7 @@ architecture behavioral of UART_FSM	is
 	signal	r_Enable		:	std_logic;
 	signal	r_Enable_2		:	std_logic;
 	signal	r_Busy			:	std_logic;
+	signal	r_Busy_Out		:	std_logic;
 	signal	r_Send			:	std_logic;
 	signal	r_Data_Out		:	std_logic_vector(7 downto 0);
 	signal	r_Done			:	std_logic;
@@ -55,9 +57,12 @@ begin
 			case r_State is
 			
 			when	UART_IDLE		=>
+									r_Busy_Out	<=	'0';
+									
 									if (r_Enable_2 = '0' and r_Enable = '1') then
 --										r_Shift_Value	<=	i_Shift_Value;
 --										r_Capture		<=	i_Capture;
+										r_Busy_Out		<=	'1';
 										r_Data_in		<=	i_Data_in;
 										r_Done			<=	'0';
 										r_Cntr			<=	c_Num_Bytes;
@@ -90,6 +95,7 @@ begin
 	w_Buffer	<=	std_logic_vector(resize(unsigned(r_Data_in), 8 * c_Num_Bytes));
 	o_Send		<=	r_Send;
 	o_Data_Out	<=	r_Data_Out;
+	o_Busy		<=	r_Busy_Out;
 	o_Done		<=	r_Done;
 
 end architecture;
