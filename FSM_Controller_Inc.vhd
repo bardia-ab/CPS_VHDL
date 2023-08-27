@@ -94,6 +94,7 @@ begin
 				if (r_Done_CM1 = '1') then
 					r_Shift_Cntr	<=	r_Shift_Cntr - 1;
 					r_En_CUT		<=	'0';
+					r_LED1			<=	'0';
 					r_State			<=	s_Reset;
 				end if;
 				

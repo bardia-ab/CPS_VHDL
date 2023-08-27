@@ -1,6 +1,8 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use work.my_package.all;
+library unisim;
+use unisim.vcomponents.all;
 ---------------------------------
 entity top is
 	generic(
@@ -12,6 +14,8 @@ entity top is
 		g_N_Partial		:	integer	:= 0;
 		g_Frequency		:	integer := 100e6;
 		g_Baud_Rate		:	integer	:= 230400;
+		g_N_Dummy_Src	:	integer	:= 0;
+		g_N_Dummy_Sink	:	integer	:= 0;
 		g_PipeLineStage	:	integer	:= 1
 	);
 	port(
@@ -43,8 +47,13 @@ end entity;
 architecture rtl of top is
 
 	constant c_UART_Din	:	integer	:= get_log2(56 * g_O2 * g_N_Sets) + g_N_Parallel;
+	constant c_N_Dummy	:	integer	:= g_N_Dummy_Src + g_N_Dummy_Sink;
 	signal	r_Trigger	:	std_logic;
 	signal	r_UART_Din	:	std_logic_vector(c_UART_Din downto 0);
+	signal	r_Dummy		:	std_logic_vector(c_N_Dummy - 1 downto 0);
+	
+	attribute DONT_TOUCH	:	string;
+	attribute DONT_TOUCH of r_Dummy	:	signal is "True";
 
 begin
 
@@ -103,5 +112,45 @@ begin
 			o_Empty		=>	open,
 			o_Tx		=>	o_Tx
 		);
-
+		
+	
+	Dummy_Srcs: for k in 0 to (g_N_Dummy_Src - 1) generate
+	
+		launch_FF : FDCE
+			generic map (
+				INIT 				=> '0',		-- Initial value of register, '0', '1'
+				-- Programmable Inversion Attributes: Specifies the use of the built-in programmable inversion
+				IS_CLR_INVERTED 	=> '0', 	-- Optional inversion for CLR
+				IS_C_INVERTED 		=> '0', 	-- Optional inversion for C
+				IS_D_INVERTED 		=> '0' 		-- Optional inversion for D
+			)
+			port map (
+				Q 					=> 		r_Dummy(k), 	-- 1-bit output: Data
+				C 					=> 		i_Clk_Launch, 	-- 1-bit input: Clock
+				CE 					=> 		'1', 			-- 1-bit input: Clock enable
+				CLR 				=> 		'0', 			-- 1-bit input: Asynchronous clear
+				D 					=> 		'1' 			-- 1-bit input: Data
+			);
+	end generate;
+	
+	
+	Dummy_Sinks: for k in 0 to (g_N_Dummy_Sink - 1) generate
+	
+		sample_FF : FDCE
+			generic map (
+				INIT 				=> '0',		-- Initial value of register, '0', '1'
+				-- Programmable Inversion Attributes: Specifies the use of the built-in programmable inversion
+				IS_CLR_INVERTED 	=> '0', 	-- Optional inversion for CLR
+				IS_C_INVERTED 		=> '1', 	-- Optional inversion for C
+				IS_D_INVERTED 		=> '0' 		-- Optional inversion for D
+			)
+			port map (
+				Q 					=> 		r_Dummy(k + g_N_Dummy_Src), 	-- 1-bit output: Data
+				C 					=> 		i_Clk_Sample, 	-- 1-bit input: Clock
+				CE 					=> 		'1', 			-- 1-bit input: Clock enable
+				CLR 				=> 		'1', 			-- 1-bit input: Asynchronous clear
+				D 					=> 		'1' 	-- 1-bit input: Data
+			);
+	end generate;	
+	
 end architecture;
