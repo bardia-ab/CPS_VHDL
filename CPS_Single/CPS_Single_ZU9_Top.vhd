@@ -9,7 +9,9 @@ entity CPS_Single_ZU9_Top is
 		g_Counter_Width	:	integer	:= 16;
 		g_N_Sets		:	integer	:= 15;
 		g_N_Segments	:	integer	:= 1;
-		g_PipeLineStage	:	integer	:= 1
+		g_PipeLineStage	:	integer	:= 1;
+		g_Baud_Rate		:	integer	:= 230400;
+		g_Frequency		:	integer	:= 1e8
 --		g_Mode			:	std_logic_vector(1 downto 0)	:= "00"	-- 0X: All Trans.  10: Falling Trans.  11: Rising Trans.
 	);
 	port(
@@ -124,20 +126,21 @@ END COMPONENT;
 	---------------------------------
 	signal	w_cntr_rd		:	std_logic_vector(13 downto 0)	:= (others => '0');
 	signal	w_cntr_wr		:	std_logic_vector(13 downto 0)	:= (others => '0');
+	signal	w_LED_1			:	std_logic;
 
 begin
 
-    Debouncer_Inst:	entity work.debounce
-		generic map(
-			clk_freq	=>	100e6,
-			stable_time	=>	10
-		)
-		port map(
-			clk		=>	i_Clk_100,
-			reset_n	=>	w_Rst_Debouncer,
-			button	=>	i_Reset,
-			result	=>	w_Reset	
-		);
+--    Debouncer_Inst:	entity work.debounce
+--		generic map(
+--			clk_freq	=>	100e6,
+--			stable_time	=>	10
+--		)
+--		port map(
+--			clk		=>	i_Clk_100,
+--			reset_n	=>	w_Rst_Debouncer,
+--			button	=>	i_Reset,
+--			result	=>	w_Reset	
+--		);
 	
 	CUT_Inst:	entity work.CUT
 		port map(
@@ -162,7 +165,7 @@ begin
 		        i_Psclk1		=>	i_Clk_100,
 		        i_Psclk2		=>	i_Clk_100,
 		        i_Start			=>	i_Start,
-		        i_Reset			=>	w_Reset,
+		        i_Reset			=>	i_Reset,
 		        i_Locked1		=>	i_Locked_1,
 		        i_Locked2		=>	i_Locked_2,
 		        i_Locked3		=>	i_Locked_3,
@@ -182,51 +185,47 @@ begin
 		        o_CLR_Cntr		=>	w_CLR_Cntr,
 		        o_Shift_Value	=>	open,
 		        o_Slct_Mux		=>	open,
-		        o_LED1			=>	o_LED_1,
+		        o_LED1			=>	w_LED_1,
 		        o_LED2			=>	o_LED_2		
 		);
 		
-	Counter_Inst:	entity work.Toggle_Counter
+	ORA_Inst:	entity work.ORA
 		generic map(
 			g_Width	=>	g_Counter_Width
 		)
 		port map(
-			i_Clk			=>	i_Clk_Sample,
+			i_Clk_Sample	=>	i_Clk_Sample,
+			i_Clk_Launch	=>	i_Clk_Launch,
 		    i_CE	        =>	w_CE_Cntr,
 		    i_input	        =>	w_CUT_Error,
 		    i_SCLR	        =>	w_CLR_Cntr,
-		    i_Mode			=>	r_Mode,
 		    o_Q		        =>	w_Cntr_Out
 		);
 		
-	UART_Controller:	entity work.UART_FSM
+	FIFO_UART_Inst	:	entity work.FIFO_UART
+		generic map(
+			g_Data_Width	=>	g_Counter_Width,
+			g_Parity		=>	"0",
+			g_Data_Bits		=>	8,
+			g_Baud_Rate		=>	g_Baud_Rate,
+			g_Frequency		=>	g_Frequency
+		)
 		port map(
-			i_Clk			=>	i_Clk_Sample,
-			i_Data_in       =>	r_FIFO_Out,
-			i_Enable        =>	w_Trigger,
-			i_Busy          =>	w_Busy,
-			o_Send          =>	w_Send,
-			o_Data_Out      =>	r_UART_Data_In,
-			o_Done          =>	w_Done
+			i_Clk_Wr	=>	i_Clk_Launch,
+			i_Clk_Rd	=>	i_Clk_100,
+			i_Reset		=>	i_Reset,
+			i_Din		=>	w_Cntr_Out,
+			i_Last		=>	w_LED_1,
+			i_Wr_En		=>	w_Trigger,
+			o_Wr_Ack	=>	open,
+			o_Full		=>	open,
+			o_Empty		=>	open,
+			o_Tx		=>	o_Tx
 		);
-
-	UART_Tx_Inst:	entity work.UART_Tx
-	generic map(
-		PARITY		=>	"0",
-		Data_Bits	=>	8,
-		Baud_Rate	=>	230400,
-		Frequency	=>	100e6
-	)
-	port map(
-		Clk			=>	i_Clk_Sample,
-		Send		=>	w_Send,
-		Data_In     =>	r_UART_Data_In,
-		Busy        =>	w_Busy,
-		Data_Out    =>	o_Tx
-	);
 	
-	w_Rst_Debouncer	<=	not i_Start;
-	r_Mode			<=	i_Mode;
+--	w_Rst_Debouncer	<=	not i_Start;
+--	r_Mode			<=	i_Mode;
+	o_LED_1			<=	w_LED_1;
 	o_LED_3			<=	w_Empty;
 
 end architecture;

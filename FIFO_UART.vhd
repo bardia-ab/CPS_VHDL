@@ -1,6 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+use work.my_package.all;
 -------------------------------
 ENTITY FIFO_UART IS
 	generic (
@@ -13,8 +14,10 @@ ENTITY FIFO_UART IS
 	port(
 		i_Clk_Wr	:	in		std_logic;
 		i_Clk_Rd	:	in		std_logic;
+		i_Reset		:	in		std_logic;
 		i_Din		:	in		std_logic_vector(g_Data_Width - 1 downto 0);
 		i_Wr_En		:	in		std_logic;
+		i_Last		:	in		std_logic;
 		o_Wr_Ack	:	out		std_logic;
 		o_Full		:	out		std_logic;
 		o_Empty		:	out		std_logic;
@@ -57,14 +60,19 @@ architecture rtl of FIFO_UART is
 	signal	w_Valid		:	std_logic;
 	------------------- UART ------------------------
 	signal	w_Busy		:	std_logic;
+	signal	r_Busy		:	std_logic;
 	signal	w_Send		:	std_logic;
+	signal	w_Send_1	:	std_logic;
+	signal	w_Send_2	:	std_logic;
 	signal	w_UART_Din	:	std_logic_vector(7 downto 0);
+	signal	w_UART_Din_1:	std_logic_vector(7 downto 0);
+	signal	w_UART_Din_2:	std_logic_vector(7 downto 0)	:= char2binary('#');
 	signal	w_UART_Done	:	std_logic;
 	signal	r_UART_Done	:	std_logic;
 	signal	w_Busy_UART_FASM	:	std_logic;
 	
-	signal	w_mux_slct	:	std_logic	:= '0';
-	signal	w_init		:	std_logic	:= '1';
+	signal	w_Mux_Slct	:	std_logic	:= '0';
+	signal	r_Stop		:	std_logic	:= '0';
 		
 begin
 
@@ -89,11 +97,12 @@ begin
 	UART_Controller:	entity work.UART_FSM
 		port map(
 			i_Clk			=>	i_Clk_Rd,
+			i_Reset			=>	i_Reset,
 			i_Data_in       =>	r_Dout,
 			i_Enable        =>	w_Valid,
 			i_Busy          =>	w_Busy,
-			o_Send          =>	w_Send,
-			o_Data_Out      =>	w_UART_Din,
+			o_Send          =>	w_Send_1,
+			o_Data_Out      =>	w_UART_Din_1,
 			o_Busy			=>	w_Busy_UART_FASM,
 			o_Done          =>	w_UART_Done
 		);
@@ -117,7 +126,7 @@ begin
 		generic map( g_Rising_Edge => '1')
 		port map(
 			i_Clk		=>	i_Clk_Rd,
-			i_Reset		=>	'0',
+			i_Reset		=>	i_Reset,
 			i_Sig		=>	w_UART_Done,
 			o_Result	=>	r_UART_Done
 	);
@@ -127,7 +136,7 @@ begin
 		generic map( g_Rising_Edge => '1')
 		port map(
 			i_Clk		=>	i_Clk_Wr,
-			i_Reset		=>	'0',
+			i_Reset		=>	i_Reset,
 			i_Sig		=>	i_Wr_En,
 			o_Result	=>	w_Wr_En
 	);
@@ -136,10 +145,9 @@ begin
 		generic map( g_Rising_Edge => '0')
 		port map(
 			i_Clk		=>	i_Clk_Rd,
-			i_Reset		=>	'0',
+			i_Reset		=>	i_Reset,
 			i_Sig		=>	w_Empty,
 			o_Result	=>	r_Empty
---			o_Result	=>	w_mux_slct
 	);
 
 	process(i_Clk_Rd)
@@ -147,9 +155,6 @@ begin
 	begin
 	
 		if (i_Clk_Rd'event and i_Clk_Rd = '1') then
---			if (w_mux_slct = '1' and w_init = '1') then
---				w_init	<=	'0';
---			end if;
 			w_rd_en	<=	'0';
 			
 			if (w_empty = '0') then
@@ -164,10 +169,33 @@ begin
 		end if;
 	
 	end process;		
+	
+	process(i_Clk_Wr, i_Reset)
+	begin
+	
+		if (i_Reset = '1') then
+			w_Mux_Slct	<=	'0';
+		elsif (i_Clk_Wr'event and i_Clk_Wr = '1') then
 		
---	w_Rd_En		<=	r_Empty when r_Empty = '1' else r_UART_Done;
---	w_rd_en	<=	'1' when (w_mux_slct and w_init)= '1' else (r_uart_Done and not w_empty);
-
+			w_Send_2	<=	'0';
+			r_Busy		<=	w_Busy;
+		
+			if (i_Last = '0') then
+				w_Mux_Slct	<=	'0';
+				r_Stop		<=	'0';
+			elsif (w_UART_Done = '1' and r_Busy = '1' and w_Busy = '0' and r_Stop = '0') then
+				w_Mux_Slct	<=	'1';
+				w_Send_2	<=	'1';
+				r_Stop		<=	'1';
+			end if;
+		
+		end if;
+	
+	end process;
+		
+	w_Send		<=	w_Send_1 		when w_Mux_Slct = '0' 	else w_Send_2;	
+	w_UART_Din	<=	w_UART_Din_1 	when w_Mux_Slct = '0' 	else w_UART_Din_2;
+	
 	o_Wr_Ack	<=	w_Wr_Ack;
 	o_Empty		<=	w_Empty;
 	o_Full		<=	w_Full;

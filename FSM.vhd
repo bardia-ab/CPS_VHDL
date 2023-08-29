@@ -9,7 +9,7 @@ entity FSM is
 		g_Counter_Width	:	integer;
 		g_N_Sets		:	integer;
 		g_N_Segments	:	integer;
-		g_N_Partial		:	integer;
+		g_N_Partial		:	integer	:= 0;
 		g_PipeLineStage	:	integer
 	);
 	port(
@@ -64,8 +64,8 @@ architecture behavioral of FSM is
 	signal	r_En_CM1		:	std_logic;
 	signal	r_En_CM2		:	std_logic;
 	signal	r_ILA_Cap_RST	:	std_logic	:= '0';
-	signal	r_LED1			:	std_logic	:= '0';
-	signal	r_LED2			:	std_logic	:= '0';
+	signal	r_LED1			:	std_logic;
+	signal	r_LED2			:	std_logic;
 	
 begin
 		
@@ -134,11 +134,13 @@ begin
 		o_En_CM2		=>	r_En_CM2,
 		o_Shift_Value	=>	o_Shift_Value,
 		o_Slct_Mux		=>	o_Slct_Mux,
-		o_LED1			=>	o_LED1,
-		o_LED2			=>	o_LED2
+		o_LED1			=>	r_LED1,
+		o_LED2			=>	r_LED2
 	);
 
 	r_Locked		<=	i_Locked1 and i_Locked2 and i_Locked3;	
 	o_Trigger		<=	r_Done_CUT;
+	o_LED1			<=	r_LED1;
+	o_LED2			<=	r_LED2;
 	
 end architecture;

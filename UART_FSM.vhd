@@ -6,6 +6,7 @@ use ieee.math_real.all;
 entity UART_FSM is
 	port(
 		i_Clk			:	in		std_logic;
+		i_Reset			:	in		std_logic;
 		i_Data_in		:	in		std_logic_vector;
 		i_Enable		:	in		std_logic;
 		i_Busy			:	in		std_logic;
@@ -33,20 +34,23 @@ architecture behavioral of UART_FSM	is
 	signal	r_Enable		:	std_logic;
 	signal	r_Enable_2		:	std_logic;
 	signal	r_Busy			:	std_logic;
-	signal	r_Busy_Out		:	std_logic;
-	signal	r_Send			:	std_logic;
+	signal	r_Busy_Out		:	std_logic	:= '0';
+	signal	r_Send			:	std_logic	:= '0';
 	signal	r_Data_Out		:	std_logic_vector(7 downto 0);
-	signal	r_Done			:	std_logic;
+	signal	r_Done			:	std_logic	:= '0';
 	------------------ Buffer ---------------------------
 	signal	w_Buffer		:	std_logic_vector(8*c_Num_Bytes-1 downto 0);
 
 begin
 
-	process(i_Clk)
+	process(i_Clk, i_Reset)
 	
 	begin
 	
-		if (i_Clk'event and i_Clk = '1') then
+		if (i_Reset = '1') then
+			r_State	<=	UART_IDLE;
+			r_Done	<=	'0';
+		elsif (i_Clk'event and i_Clk = '1') then
 		
 			r_Busy			<=	i_Busy;
 			r_Enable		<=	i_Enable;

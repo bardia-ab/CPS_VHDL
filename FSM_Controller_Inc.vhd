@@ -57,6 +57,7 @@ architecture behavioral of FSM_Controller_Inc is
 	attribute mark_debug	:	string;
 	attribute mark_debug of r_Shift_Cntr	:	signal is "True";
 	attribute mark_debug of r_Segment_Cntr	:	signal is "True";
+	attribute mark_debug of r_LED1			:	signal is "True";
 
 begin
 	

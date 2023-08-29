@@ -22,6 +22,7 @@ entity top is
 		i_Reset		    :	in		std_logic;
 		i_Start		    :	in		std_logic;
 		i_Mode		    :	in		std_logic_vector(1 downto 0);
+--		i_Rx			:	in		std_logic;
 		i_Clk_100       :   in      std_logic;   
         i_Clk_Launch    :   in      std_logic;
         i_Clk_Sample    :   in      std_logic;
@@ -51,6 +52,7 @@ architecture rtl of top is
 	signal	r_Trigger	:	std_logic;
 	signal	r_UART_Din	:	std_logic_vector(c_UART_Din downto 0);
 	signal	r_Dummy		:	std_logic_vector(c_N_Dummy - 1 downto 0);
+	signal	w_LED_1		:	std_logic;
 	
 	attribute DONT_TOUCH	:	string;
 	attribute DONT_TOUCH of r_Dummy	:	signal is "True";
@@ -72,7 +74,8 @@ begin
 		port map(
 			i_Reset		 	=>	i_Reset,		 
 			i_Start		    =>	i_Start,		 
-			i_Mode		    =>	i_Mode,		 
+			i_Mode		    =>	i_Mode,	
+--			i_Rx			=>	i_Rx,	 
 			i_Clk_100       =>	i_Clk_100,    
 			i_Clk_Launch    =>	i_Clk_Launch, 
 			i_Clk_Sample    =>	i_Clk_Sample, 
@@ -91,7 +94,7 @@ begin
 		    o_UART_Din		=>	r_UART_Din,
 		    o_Trigger		=>	r_Trigger,
 --		    o_Tx		    =>	o_Tx,		 
-		    o_LED_1		    =>	o_LED_1		 
+		    o_LED_1		    =>	w_LED_1		 
 		);
 
 	FIFO_UART_Inst	:	entity work.FIFO_UART
@@ -105,8 +108,10 @@ begin
 		port map(
 			i_Clk_Wr	=>	i_Clk_Sample,
 			i_Clk_Rd	=>	i_Clk_100,
+			i_Reset		=>	i_Reset,
 			i_Din		=>	r_UART_Din,
 			i_Wr_En		=>	r_Trigger,
+			i_Last		=>	w_LED_1,
 			o_Wr_Ack	=>	open,
 			o_Full		=>	open,
 			o_Empty		=>	open,
@@ -151,6 +156,8 @@ begin
 				CLR 				=> 		'1', 			-- 1-bit input: Asynchronous clear
 				D 					=> 		'1' 	-- 1-bit input: Data
 			);
-	end generate;	
+	end generate;
+	
+	o_LED_1	<=	w_LED_1;	
 	
 end architecture;

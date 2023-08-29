@@ -5,19 +5,23 @@ use unisim.vcomponents.all;
 ------------------------------------
 entity CPS_Single_Top is
 	generic(
-		g_O2			:	integer	:= 16;	
-		g_Counter_Width	:	integer	:= 16;
+		g_O2			:	integer	:= 8;	
+		g_Counter_Width	:	integer	:= 10;
 		g_N_Sets		:	integer	:= 15;
 		g_N_Segments	:	integer	:= 1;
+		g_N_Parallel	:	integer	:= 50;
+		g_N_Partial		:	integer	:= 0;
+		g_Frequency		:	integer := 100e6;
+		g_Baud_Rate		:	integer	:= 230400;
 		g_PipeLineStage	:	integer	:= 1
---		g_Mode			:	std_logic_vector(1 downto 0)	:= "00"	-- 0X: All Trans.  10: Falling Trans.  11: Rising Trans.
 	);
 	port(
 		i_Clk_In_P	    :	in		std_logic;
 		i_Clk_In_N	    :	in		std_logic;
-		i_Reset		    :	in		std_logic;
-		i_Start		    :	in		std_logic;
-		i_Mode		    :	in		std_logic_vector(1 downto 0);
+		i_Rx			:	in		std_logic;
+--		i_Reset		    :	in		std_logic;
+--		i_Start		    :	in		std_logic;
+--		i_Mode		    :	in		std_logic_vector(1 downto 0);
 		o_Tx		    :	out		std_logic;
 		o_LED_1		    :	out		std_logic;
 		o_LED_2		    :	out		std_logic;
@@ -27,54 +31,12 @@ end entity;
 ------------------------------------
 architecture behavioral of CPS_Single_Top is
 
-	COMPONENT ila_0
-		PORT (
-			clk 	: IN STD_LOGIC;
-			probe0 	: IN STD_LOGIC_VECTOR(0 DOWNTO 0);
-			probe1 	: IN STD_LOGIC_VECTOR(15 DOWNTO 0)
-		);
-	END COMPONENT  ;
-	
-	COMPONENT c_counter_binary_0
-  PORT (
-    CLK : IN STD_LOGIC;
-    CE : IN STD_LOGIC;
-    Q : OUT STD_LOGIC_VECTOR(13 DOWNTO 0)
-  );
-	END COMPONENT;
-
-	COMPONENT fifo_generator_0
-		PORT (
-			srst 		: IN STD_LOGIC;
-			wr_clk 		: IN STD_LOGIC;
-			rd_clk 		: IN STD_LOGIC;
-			din 		: IN STD_LOGIC_VECTOR(15 DOWNTO 0);
-			wr_en 		: IN STD_LOGIC;
-			rd_en 		: IN STD_LOGIC;
-			dout 		: OUT STD_LOGIC_VECTOR(15 DOWNTO 0);
-			full 		: OUT STD_LOGIC;
-			wr_ack 		: OUT STD_LOGIC;
-			empty 		: OUT STD_LOGIC;
-			valid 		: OUT STD_LOGIC;
-			wr_rst_busy : OUT STD_LOGIC;
-			rd_rst_busy : OUT STD_LOGIC
-		);
-	END COMPONENT;
-	
-	COMPONENT vio_0
+COMPONENT vio_0
   PORT (
     clk : IN STD_LOGIC;
-    probe_in0 : IN STD_LOGIC_VECTOR(13 DOWNTO 0)
-  );
-
-END COMPONENT;
-
-COMPONENT vio_1
-  PORT (
-    clk : IN STD_LOGIC;
-    probe_in0 : IN STD_LOGIC_VECTOR(13 DOWNTO 0);
+    probe_in0 : IN STD_LOGIC_VECTOR(0 DOWNTO 0);
     probe_in1 : IN STD_LOGIC_VECTOR(0 DOWNTO 0);
-    probe_in2 : IN STD_LOGIC_VECTOR(0 DOWNTO 0)
+    probe_in2 : IN STD_LOGIC_VECTOR(1 DOWNTO 0)
   );
 END COMPONENT;
 	
@@ -103,6 +65,7 @@ END COMPONENT;
 	---------------- Debouncer ----------------------
 	signal	w_Reset			:	std_logic;
 	signal	w_Rst_Debouncer	:	std_logic;
+	signal	w_Start			:	std_logic;
 	---------------- CUT ----------------------
 	signal	w_CE_CUT		:	std_logic;
 	signal	w_Q_Launch		:	std_logic;
@@ -114,7 +77,7 @@ END COMPONENT;
 	signal	w_Cntr_Out		:	std_logic_vector(g_Counter_Width - 1 downto 0);
 	---------------- Debug ----------------------
 	signal	w_Trigger		:	std_logic;
-	signal	r_Mode			:	std_logic_vector(1 downto 0);
+	signal	w_Mode			:	std_logic_vector(1 downto 0);
 	signal	w_cntr			:	std_logic_vector(15 downto 0);
 	---------------- UART ----------------------
 	signal	w_Busy			:	std_logic;
@@ -140,6 +103,19 @@ END COMPONENT;
 
 begin
 
+	Instruction_Cont_Inst	:	entity work.Instruction_Controller
+		generic map(
+			g_Baud_Rate		=>	g_Baud_Rate,
+			g_Frequency		=>	g_Frequency
+		)
+		port map(
+			i_Clk	    	=>	w_Clk_100,
+			i_Data_In	    =>	i_Rx,
+			o_Start		    =>	w_Start,
+			o_Reset		    =>	w_Reset,
+			o_Mode		    =>	w_Mode
+		);
+
 	CMs_Inst    :   entity work.Clock_Managers
         port map(
             i_Clk_In_P      =>  i_Clk_In_P,
@@ -161,17 +137,17 @@ begin
             o_Psdone_2      =>  w_Psdone_2   
         );
 	
-    Debouncer_Inst:	entity work.debounce
-		generic map(
-			clk_freq	=>	100e6,
-			stable_time	=>	10
-		)
-		port map(
-			clk		=>	w_Clk_100,
-			reset_n	=>	w_Rst_Debouncer,
-			button	=>	i_Reset,
-			result	=>	w_Reset	
-		);
+--    Debouncer_Inst:	entity work.debounce
+--		generic map(
+--			clk_freq	=>	100e6,
+--			stable_time	=>	10
+--		)
+--		port map(
+--			clk		=>	w_Clk_100,
+--			reset_n	=>	w_Rst_Debouncer,
+--			button	=>	i_Reset,
+--			result	=>	w_Reset	
+--		);
 	
 	CUT_Inst:	entity work.CUT
 		port map(
@@ -195,14 +171,14 @@ begin
 				i_Clk_Sample	=>	w_Clk_Sample,	
 		        i_Psclk1		=>	w_Clk_100,
 		        i_Psclk2		=>	w_Clk_100,
-		        i_Start			=>	i_Start,
+		        i_Start			=>	w_Start,
 		        i_Reset			=>	w_Reset,
 		        i_Locked1		=>	w_Locked_1,
 		        i_Locked2		=>	w_Locked_2,
 		        i_Locked3		=>	w_Locked_3,
 		        i_Psdone1		=>	w_Psdone_1,
 		        i_Psdone2		=>	w_Psdone_2,
-		        i_Mode			=>	r_Mode,
+		        i_Mode			=>	w_Mode,
 		        o_Trigger		=>	w_Trigger,
 		        o_Psen1			=>	w_Psen_1,
 		        o_Psen2			=>	w_Psen_2,
@@ -235,16 +211,17 @@ begin
 		
 	FIFO_UART_Inst	:	entity work.FIFO_UART
 		generic map(
-			g_Data_Width	=>	16,
+			g_Data_Width	=>	g_Counter_Width,
 			g_Parity		=>	"0",
 			g_Data_Bits		=>	8,
-			g_Baud_Rate		=>	230400,
-			g_Frequency		=>	100e6
+			g_Baud_Rate		=>	g_Baud_Rate,
+			g_Frequency		=>	g_Frequency
 		)
 		port map(
 			i_Clk_Wr	=>	w_Clk_Launch,
 			i_Clk_Rd	=>	w_Clk_100,
 			i_Din		=>	w_Cntr_Out,
+			i_Last		=>	w_LED_1,
 			i_Wr_En		=>	w_Trigger,
 			o_Wr_Ack	=>	open,
 			o_Full		=>	open,
@@ -252,9 +229,16 @@ begin
 			o_Tx		=>	o_Tx
 		);
 
+VIO_Inst : vio_0
+  PORT MAP (
+    clk 			=> w_Clk_100,
+    probe_in0(0) 	=> w_Start,
+    probe_in1(0) 	=> w_Reset,
+    probe_in2 		=> w_Mode
+  );
 
-	w_Rst_Debouncer	<=	not i_Start;
-	r_Mode			<=	i_Mode;
+--	w_Rst_Debouncer	<=	not i_Start;
+--	r_Mode			<=	i_Mode;
 	o_LED_1			<=	w_LED_1;
 	o_LED_3			<=	w_Empty;
 
