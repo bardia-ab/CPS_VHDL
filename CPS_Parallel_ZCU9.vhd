@@ -164,49 +164,49 @@ begin
 		        o_LED2			=>	open		
 		);
 
---	Multiple_Segments:   for i in 0 to (c_Segments - 1) generate
---	 	Regular	:	if i < g_N_Segments generate	
---			 Multiple_CUT:	 for j in 0 to (g_N_Parallel - 1) generate
---				CUT	:	entity work.CUT
---					port map(
---						i_Clk_Launch	=>	w_Clk_Launch,
---						i_Clk_Sample	=>	w_Clk_Sample,
---						i_CE			=>	w_CE_CUT,
---						i_CLR        	=>  '0',
---						o_Error			=>	w_Error_Mux_In(i)(j) 
---					);
---			end generate;
---		end generate;
+	Multiple_Segments:   for i in 0 to (c_Segments - 1) generate
+	 	Regular	:	if i < g_N_Segments generate	
+			 Multiple_CUT:	 for j in 0 to (g_N_Parallel - 1) generate
+				CUT	:	entity work.CUT
+					port map(
+						i_Clk_Launch	=>	w_Clk_Launch,
+						i_Clk_Sample	=>	w_Clk_Sample,
+						i_CE			=>	w_CE_CUT,
+						i_CLR        	=>  '0',
+						o_Error			=>	w_Error_Mux_In(i)(j) 
+					);
+			end generate;
+		end generate;
 		
---		Partial	:	if i = g_N_Segments generate	
---			Multiple_CUT:	 for j in 0 to (g_N_Partial - 1) generate
---				CUT	:	entity work.CUT
---					port map(
---						i_Clk_Launch	=>	w_Clk_Launch,
---						i_Clk_Sample	=>	w_Clk_Sample,
---						i_CE			=>	w_CE_CUT,
---						i_CLR        	=>  '0',
---						o_Error			=>	w_Error_Mux_In(i)(j) 
---					);
---			end generate;
+		Partial	:	if i = g_N_Segments generate	
+			Multiple_CUT:	 for j in 0 to (g_N_Partial - 1) generate
+				CUT	:	entity work.CUT
+					port map(
+						i_Clk_Launch	=>	w_Clk_Launch,
+						i_Clk_Sample	=>	w_Clk_Sample,
+						i_CE			=>	w_CE_CUT,
+						i_CLR        	=>  '0',
+						o_Error			=>	w_Error_Mux_In(i)(j) 
+					);
+			end generate;
 			
---			w_Error_Mux_In(i)(g_N_Parallel - 1 downto g_N_Partial)	<=	(others => '0');
+			w_Error_Mux_In(i)(g_N_Parallel - 1 downto g_N_Partial)	<=	(others => '0');
 			
---		end generate;
---	end generate;
+		end generate;
+	end generate;
 
-	CUTs_Inst	:	entity work.CUTs
-	generic map(
-		g_N_Segments	=>	c_Segments, 
-		g_N_Parallel 	=>	g_N_Parallel
-	)
-	port map(
-		i_Clk_Launch	=>	w_Clk_Launch,
-		i_Clk_Sample	=>	w_Clk_Sample,
-		i_CE			=>	w_CE_CUT,
-		i_CLR        	=>  '0',
-		o_Error			=>	w_Error_Mux_In
-	);
+--	CUTs_Inst	:	entity work.CUTs
+--	generic map(
+--		g_N_Segments	=>	c_Segments, 
+--		g_N_Parallel 	=>	g_N_Parallel
+--	)
+--	port map(
+--		i_Clk_Launch	=>	w_Clk_Launch,
+--		i_Clk_Sample	=>	w_Clk_Sample,
+--		i_CE			=>	w_CE_CUT,
+--		i_CLR        	=>  '0',
+--		o_Error			=>	w_Error_Mux_In
+--	);
 		
 	COUNTER_GEN	:	for j in 0 to (g_N_Parallel - 1) generate
 
