@@ -57,7 +57,7 @@ architecture behavioral of FSM_Controller_Inc is
 	attribute mark_debug	:	string;
 	attribute mark_debug of r_Shift_Cntr	:	signal is "True";
 	attribute mark_debug of r_Segment_Cntr	:	signal is "True";
-	attribute mark_debug of r_LED1			:	signal is "True";
+	--attribute mark_debug of r_LED1			:	signal is "True";
 
 begin
 	
@@ -80,6 +80,9 @@ begin
 			r_Segment_Cntr	<=	to_unsigned(0, r_Segment_Cntr'length);
 			r_LED1			<=	'0';
 			r_LED2			<=	'0';
+			r_Reset1		<=	'1';
+			r_Reset2		<=	'1';
+			r_Reset3		<=	'1';
 		
 		elsif (i_Psclk1'event and i_Psclk1 = '1') then
 			
@@ -113,9 +116,9 @@ begin
 					else
 						r_Shift_Cntr	<=	to_unsigned(c_N_Shifts, r_Shift_Cntr'length);
 						r_Segment_Cntr	<=	(others => '0');
-						r_Reset1		<=	'1';
-						r_Reset2		<=	'1';
-						r_Reset3		<=	'1';
+--						r_Reset1		<=	'1';
+--						r_Reset2		<=	'1';
+--						r_Reset3		<=	'1';
 						r_LED1			<=	'1';
 						r_State			<=	s_Shift;
 					end if;
@@ -146,5 +149,6 @@ begin
 	o_Psincdec2     <=	'0';
 	o_LED1			<=	r_LED1;
 	o_LED2			<=	r_LED2;
+--	o_LED3			<=	std_logic_vector(to_unsigned(g_N_Segments, 2)(1);
 
 end architecture;

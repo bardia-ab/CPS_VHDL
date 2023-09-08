@@ -23,6 +23,7 @@ ENTITY FIFO_UART IS
 		o_Full		:	out		std_logic;
 		o_Empty		:	out		std_logic;
 		o_Tx		:	out		std_logic
+--		o_LED_2		:	out		std_logic
 	);
 END ENTITY;
 -------------------------------
@@ -78,6 +79,9 @@ architecture rtl of FIFO_UART is
 	signal	w_Mux_Slct	:	std_logic	:= '0';
 	signal	r_Stop		:	std_logic	:= '0';
 	signal	r_End_Cntr	:	integer	range 0 to 3	:= 0;
+	signal	r_Wait		:	integer range 0 to 1023	:= 0;
+	signal	r_End_Flag	:	std_logic				:= '0';
+	
 		
 begin
 
@@ -184,7 +188,31 @@ begin
 			
 		end if;
 	
-	end process;		
+	end process;	
+	
+	process(i_Clk_Rd, i_Reset)
+	begin
+	
+		if (i_Reset = '1') then
+			r_Wait		<= 0;
+			r_End_Flag	<=	'0';
+		elsif (i_Clk_Rd'event and i_Clk_Rd = '1') then
+		
+			if (r_Empty = '1') then
+				if (r_Wait < 1023) then
+					r_Wait	<=	r_Wait + 1;
+				elsif (w_Empty = '0') then
+					r_Wait	<= 0;
+				else
+					r_End_Flag	<=	'1';
+				end if;
+			elsif (i_Last = '1') then
+				r_End_Flag	<=	'1';
+			end if;
+		
+		end if;
+	
+	end process;	
 	
 --	process(i_Clk_Wr, i_Reset)
 --	begin
@@ -233,7 +261,8 @@ begin
 			case r_State is
 			
 			when s0 	=>
-							if (i_Last = '1' and w_UART_Done = '1' and r_Busy = '1' and w_Busy = '0') then
+--							if (i_Last = '1' and ((w_UART_Done = '1' and r_Busy = '1' and w_Busy = '0') or w_Empty = '1')) then
+							if (i_Last = '1' and  r_End_Flag = '1' and w_Busy = '0') then
 								w_Mux_Slct	<=	'1';
 								r_State		<=	s1;
 							end if;
@@ -261,5 +290,6 @@ begin
 	o_Wr_Ack	<=	w_Wr_Ack;
 	o_Empty		<=	w_Empty;
 	o_Full		<=	w_Full;
+--	o_LED_2		<=	r_End_Flag;
 	
 end architecture;
