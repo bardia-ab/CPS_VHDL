@@ -7,10 +7,8 @@ entity CPS_Single_Top is
 	generic(
 		g_O2			:	integer	:= 8;	
 		g_Counter_Width	:	integer	:= 10;
-		g_N_Sets		:	integer	:= 15;
+		g_N_Sets		:	integer	:= 127;
 		g_N_Segments	:	integer	:= 1;
-		g_N_Parallel	:	integer	:= 50;
-		g_N_Partial		:	integer	:= 0;
 		g_Frequency		:	integer := 100e6;
 		g_Baud_Rate		:	integer	:= 230400;
 		g_PipeLineStage	:	integer	:= 1
@@ -25,7 +23,8 @@ entity CPS_Single_Top is
 		o_Tx		    :	out		std_logic;
 		o_LED_1		    :	out		std_logic;
 		o_LED_2		    :	out		std_logic;
-		o_LED_3		    :	out		std_logic
+		o_LED_3		    :	out		std_logic;
+		o_LED_4		    :	out		std_logic
 	);
 end entity;
 ------------------------------------
@@ -220,22 +219,23 @@ begin
 		port map(
 			i_Clk_Wr	=>	w_Clk_Launch,
 			i_Clk_Rd	=>	w_Clk_100,
+			i_Reset		=>	w_Reset,
 			i_Din		=>	w_Cntr_Out,
 			i_Last		=>	w_LED_1,
 			i_Wr_En		=>	w_Trigger,
 			o_Wr_Ack	=>	open,
-			o_Full		=>	open,
-			o_Empty		=>	open,
+			o_Full		=>	o_LED_4,
+			o_Empty		=>	w_Empty,
 			o_Tx		=>	o_Tx
 		);
 
-VIO_Inst : vio_0
-  PORT MAP (
-    clk 			=> w_Clk_100,
-    probe_in0(0) 	=> w_Start,
-    probe_in1(0) 	=> w_Reset,
-    probe_in2 		=> w_Mode
-  );
+--VIO_Inst : vio_0
+--  PORT MAP (
+--    clk 			=> w_Clk_100,
+--    probe_in0(0) 	=> w_Start,
+--    probe_in1(0) 	=> w_Reset,
+--    probe_in2 		=> w_Mode
+--  );
 
 --	w_Rst_Debouncer	<=	not i_Start;
 --	r_Mode			<=	i_Mode;

@@ -1,95 +1,97 @@
-library IEEE;
-use IEEE.std_logic_1164.all;
-use IEEE.numeric_std.all;
-use	IEEE.math_real.all;
-use IEEE.std_logic_misc.all;
------------------------------------------
-entity UART_Tx is
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+use ieee.math_real.all;
+use ieee.std_logic_misc.all;
+--------------------------------------
+entity UART_Tx_2 is
 	generic(
-		PARITY		:	std_logic_vector(0 downto 0)	:=	"0";
-		Data_Bits	:	integer							:=	8;
-		Baud_Rate	:	integer							:=	9600;
-		Frequency	:	integer							:=	1e8		-- In Hertz
+		g_Parity	:	std_logic_vector(0 downto 0)	:= "0";
+		g_N_Bits	:	integer							:= 8;
+		g_Baud_Rate	:	integer							:= 230400;
+		g_Frequency	:	integer							:= 1e8 -- Hz
+	
 	);
 	port(
-		Clk			:	in		std_logic;
-		Send		:	in		std_logic;
-		Data_In		:	in		std_logic_vector((Data_Bits - 1) downto 0);
-		Busy		:	out		std_logic;
-		Data_Out	:	out		std_logic
+		i_Clk		:	in		std_logic;
+		i_Send		:	in		std_logic;
+		i_Data_In	:	in		std_logic_vector(g_N_Bits - 1 downto 0);
+		o_Busy		:	out		std_logic;
+		o_Tx		:	out		std_logic
 	);
 end entity;
------------------------------------------
-Architecture Behavioral of UART_Tx is
+--------------------------------------
+architecture behavioral of UART_Tx_2	is
 
-	-------- Types --------
-	type UART_STATE is (UART_IDLE, UART_TRANSMIT);
-	
-	-------- Constants --------
-	constant	Bit_Width		:	integer											:=	integer(ceil(real(Frequency) / real(Baud_Rate)));
-	constant	Packet_Width	:	integer											:=	Data_Bits + 2 + to_integer(unsigned(PARITY));
-	-------- Internal Signals --------
-	signal	state				:	UART_STATE										:=	UART_IDLE;
-	signal	Parity_Bit			:	std_logic										:=	'0';
-	signal	Packet				:	std_logic_vector((Packet_Width - 1) downto 0)	:=	(others => '0');
-	signal	Send_Reg			:	std_logic										:=	'0';
-	signal	Data_In_Reg			:	std_logic_vector((Data_Bits - 1) downto 0)		:=	(others => '0');
-	signal	Busy_Int			:	std_logic										:=	'0';
-	signal	Data_Out_Int		:	std_logic										:=	'1';
-	
-	-------- Counters --------
-	signal	Bit_Index_Counter	:	integer range 0 to (Packet_Width - 1)			:=	0;
-	signal	Bit_Width_Counter	:	integer range 1 to Bit_Width					:=	1;
+	------------- Constants ------------------
+	constant	c_Clks_Per_Bit	:	integer	:=	integer(ceil(real(g_Frequency) / real(g_Baud_Rate)));
+	constant	c_Packet_Width	:	integer	:=	g_N_Bits + 2 + to_integer(unsigned(g_Parity));
+	------------- Types ------------------
+	type t_States is (s_IDLE, s_TRANSMIT, s2);
+	signal	r_State				:	t_States	:= s_IDLE;
+	------------- Registers ------------------
+	signal	r_Send				:	std_logic;
+	signal	r_Data_In			:	std_logic_vector(g_N_Bits - 1 downto 0);
+	signal	r_Busy				:	std_logic	:= '0';
+	signal	r_Tx				:	std_logic	:= '1';
+	signal	r_Parity_Bit		:	std_logic;	
+	signal	r_Packet			:	std_logic_vector(c_Packet_Width - 1 downto 0);
+	------------- Counters ---------------------
+	signal	r_Bit_Index			:	integer range 0 to (c_Packet_Width - 1)	:= 0;
+	signal	r_Bit_Width_Cntr	:	integer range 0 to (c_Clks_Per_Bit - 1)	:= (c_Clks_Per_Bit - 1);
 
 begin
 
-	process(Clk)
-	
+	process(i_Clk)
 	begin
 	
-		if (Clk'event and Clk = '1') then
-			Send_Reg	<=	Send;
+		if (i_Clk'event and i_Clk = '1') then
 			
-			case	state	is
+			r_Send	<=	i_Send;
 			
-			when	UART_IDLE		=>
-							Busy_Int		<=	'0';
-							Data_Out_Int	<=	'1';
-							
-							if (Send_Reg = '0' and Send = '1') then
-								Data_In_Reg	<=	Data_In;
-								Busy_Int	<=	'1';
-								state		<=	UART_TRANSMIT;
-							end if;
-							
-			when	UART_TRANSMIT	=>
-							Data_Out_Int	<=	Packet(Bit_Index_Counter);	
-							
-							if (Bit_Width_Counter < Bit_Width) then
-								Bit_Width_Counter	<=	Bit_Width_Counter + 1;
-								
-							elsif (Bit_Index_Counter = (Packet_Width - 1)) then
-								Bit_Width_Counter	<=	1;
-								Bit_Index_Counter	<=	0;
-								state				<=	UART_IDLE;
-								
-							else
-								Bit_Width_Counter	<=	1;	-- This is one Clk after transmiting the previous bit
-								Bit_Index_Counter	<=	Bit_Index_Counter + 1;
-							end if;
-														
-			when	others	=>
-							state			<=	UART_IDLE;
-							
+			case r_State	is
+			
+				when	s_IDLE		=>
+					r_Busy				<=	'0';
+					r_Tx				<=	'1';
+					
+					if (r_Send = '0' and i_Send = '1') then
+						r_Bit_Width_Cntr	<=	(c_Clks_Per_Bit - 1);
+						r_Bit_Index			<=	0;
+						r_Data_In			<=	i_Data_In;
+						r_Busy				<=	'1';
+						r_State				<=	s_TRANSMIT;
+					end if;
+					
+				when	s_TRANSMIT	=>
+				
+					r_Tx	<=	r_Packet(r_Bit_Index);
+					
+					if (r_Bit_Width_Cntr > 0) then
+						r_Bit_Width_Cntr	<=	r_Bit_Width_Cntr - 1;
+					else
+						r_Bit_Width_Cntr	<=	(c_Clks_Per_Bit - 1);
+						
+						if (r_Bit_Index < (c_Packet_Width - 1)) then
+							r_Bit_Index	<=	r_Bit_Index + 1;
+						else
+							r_Bit_Index	<=	0;
+							r_State		<=	s_IDLE;
+						end if;
+					
+					end if;
+				when	others		=>
+					r_State		<=	s_IDLE;
 			end case;
-			
+		
 		end if;
 	
 	end process;
-	
-	Parity_Bit	<=	xor_reduce (Data_In_Reg);
-	Packet		<=	'1' & Parity_Bit & Data_In_Reg & '0' when (PARITY = "1") else '1' & Data_In_Reg & '0';
-	Busy		<=	Busy_Int;
-	Data_Out	<=	Data_Out_Int;
+		
+	r_Parity_Bit	<=	xor_reduce (r_Data_In);
+	r_Packet		<=	('1' & r_Parity_Bit & r_Data_In & '0') when (g_Parity = "1") else 
+						('1' & r_Data_In & '0');
+	o_Busy			<=	r_Busy;
+	o_Tx			<=	r_Tx;
 
-end Architecture;
+end architecture;

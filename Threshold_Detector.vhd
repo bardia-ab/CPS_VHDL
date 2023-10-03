@@ -55,7 +55,7 @@ begin
 			when s2	=>
 				null;
 			when others	=>
-				r_State	<=	s0;
+				r_State	<=	s2;
 			end case;
 		end if;
 	end process;

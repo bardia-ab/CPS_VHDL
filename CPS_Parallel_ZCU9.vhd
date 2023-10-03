@@ -100,30 +100,6 @@ architecture behavioral of CPS_Parallel_ZCU9 is
 	attribute mark_debug of w_CE_Cntr		:	signal is "True";
 
 begin
- 		
---    Debouncer_Inst:	entity work.debounce
---		generic map(
---			clk_freq	=>	g_Frequency,
---			stable_time	=>	10
---		)
---		port map(
---			clk		=>	w_Clk_100,
---			reset_n	=>	w_Rst_Debouncer,
---			button	=>	i_Reset,
---			result	=>	w_Reset	
---		);
---	Instruction_Cont_Inst	:	entity work.Instruction_Controller
---		generic map(
---			g_Baud_Rate		=>	g_Baud_Rate,
---			g_Frequency		=>	g_Frequency
---		)
---		port map(
---			i_Clk	    	=>	w_Clk_100,
---			i_Data_In	    =>	i_Rx,
---			o_Start		    =>	w_Start,
---			o_Reset		    =>	w_Reset,
---			o_Mode		    =>	w_Mode
---		);
 		
 	FSM_Inst:	entity work.FSM
 		generic map(
@@ -242,24 +218,6 @@ begin
 			o_Output	=>	w_Error_Mux_Out
 		);
 	
---	FIFO_UART_Inst	:	entity work.FIFO_UART
---		generic map(
---			g_Data_Width	=>	r_UART_Din'length,
---			g_Parity		=>	"0",
---			g_Data_Bits		=>	8,
---			g_Baud_Rate		=>	g_Baud_Rate,
---			g_Frequency		=>	g_Frequency
---		)
---		port map(
---			i_Clk_Wr	=>	w_Clk_Sample,
---			i_Clk_Rd	=>	w_Clk_100,
---			i_Din		=>	r_UART_Din,
---			i_Wr_En		=>	w_Capture_ILA,
---			o_Wr_Ack	=>	open,
---			o_Full		=>	open,
---			o_Empty		=>	open,
---			o_Tx		=>	o_Tx
---		);
 
 	process(w_Clk_Sample)
 	begin

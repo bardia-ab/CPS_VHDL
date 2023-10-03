@@ -45,13 +45,6 @@ end entity;
 -----------------------------------
 architecture behavioral of FSM is
 
-	--------------- Constants ---------------------	
-	constant	c_N_Shifts	:	integer	:= 56 * g_O2 * g_N_Sets;
-	
-	--------------- Counters ---------------------
-	signal	r_Shift_Cntr	:	unsigned(get_log2(c_N_Shifts) downto 0) 	:= to_unsigned(c_N_Shifts - 1, get_log2(c_N_Shifts) + 1);
-	signal 	r_Segment_Cntr  :   unsigned(get_log2(g_N_Segments) downto 0)   := to_unsigned(0, get_log2(g_N_Segments) + 1);
-	
 	--------------- Internal Regs ---------------------
 	signal	w_Enable_CUT	:	std_logic	:= '0';
 	signal	w_Trigger_CUT_1	:	std_logic;
