@@ -4,7 +4,7 @@ use ieee.numeric_std.all;
 use ieee.math_real.all;
 use ieee.std_logic_misc.all;
 --------------------------------------
-entity UART_Tx_2 is
+entity UART_Tx is
 	generic(
 		g_Parity	:	std_logic_vector(0 downto 0)	:= "0";
 		g_N_Bits	:	integer							:= 8;
@@ -21,7 +21,7 @@ entity UART_Tx_2 is
 	);
 end entity;
 --------------------------------------
-architecture behavioral of UART_Tx_2	is
+architecture behavioral of UART_Tx	is
 
 	------------- Constants ------------------
 	constant	c_Clks_Per_Bit	:	integer	:=	integer(ceil(real(g_Frequency) / real(g_Baud_Rate)));

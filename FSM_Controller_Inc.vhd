@@ -37,7 +37,7 @@ end entity;
 architecture behavioral of FSM_Controller_Inc is
 
 	--------------- Constants ---------------------	
-	constant	c_N_Shifts	:	integer	:= 56 * g_O2 * g_N_Sets;
+	constant	c_N_Shifts	:	integer	:= 56 * g_O2 * g_N_Sets - 1;
 	--------------- States ---------------------
 	type t_my_type is (s_Shift, s_Reset, s_Enable_CUT);
 	signal	r_State	:	t_my_type	:= s_Shift;

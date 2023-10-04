@@ -39,9 +39,9 @@ entity top is
         o_Psincdec_1    :   out     std_logic;
         o_Psincdec_2    :   out     std_logic;
 		o_Tx		    :	out		std_logic;
-		o_LED_1		    :	out		std_logic
---		o_LED_2		    :	out		std_logic
-		-- o_LED_3		    :	out		std_logic
+		o_LED_1		    :	out		std_logic;
+		o_LED_2		    :	out		std_logic;
+		o_LED_3		    :	out		std_logic
 	);
 end entity;
 ---------------------------------
@@ -115,8 +115,9 @@ begin
 			o_Wr_Ack	=>	open,
 			o_Full		=>	open,
 			o_Empty		=>	open,
-			o_Tx		=>	o_Tx
---			o_LED_2		=>	o_LED_2
+			o_Tx		=>	o_Tx,
+			o_LED_2		=>	o_LED_2,
+			o_LED_3		=>	o_LED_3
 		);
 		
 	
