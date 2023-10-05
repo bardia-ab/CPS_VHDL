@@ -83,11 +83,9 @@ architecture rtl of FIFO_UART is
 	signal	first_flag			:	std_logic				:= '0';
 	signal	r_LED_2				:	std_logic				:= '0';
 	signal	r_LED_3				:	std_logic				:= '0';
-	
 		
 begin
 
-	
 	FIFO_Inst : fifo_generator_0
 		PORT MAP (
 			srst 		=> '0',
@@ -112,6 +110,7 @@ begin
 			i_Data_in       =>	r_Dout,
 			i_Enable        =>	w_Valid,
 			i_Busy          =>	w_Busy,
+			i_Last			=>	i_Last,
 			o_Send          =>	w_Send_1,
 			o_Data_Out      =>	w_UART_Din_1,
 			o_Busy			=>	w_Busy_UART_FASM,
@@ -119,30 +118,20 @@ begin
 		);
 
 	UART_Tx_Inst:	entity work.UART_Tx
-	generic map(
-		g_Parity	=>	g_Parity,
-		g_N_Bits	=>	g_Data_Bits,
-		g_Baud_Rate	=>	g_Baud_Rate,
-		g_Frequency	=>	g_Frequency
-	)
-	port map(
-		i_Clk		=>	i_Clk_Rd,
-		i_Send		=>	w_Send,
-		i_Data_In	=>	w_UART_Din,
-		o_Busy      =>	w_Busy,
-		o_Tx    	=>	o_Tx
-	);
-	
---	Edge_Det_Inst1	:	entity work.Edge_Detector
---		generic map( g_Rising_Edge => '1')
---		port map(
---			i_Clk		=>	i_Clk_Rd,
---			i_Reset		=>	i_Reset,
---			i_Sig		=>	w_UART_Done,
---			o_Result	=>	r_UART_Done
---	);
-	
-	
+		generic map(
+			g_Parity	=>	g_Parity,
+			g_N_Bits	=>	g_Data_Bits,
+			g_Baud_Rate	=>	g_Baud_Rate,
+			g_Frequency	=>	g_Frequency
+		)
+		port map(
+			i_Clk		=>	i_Clk_Rd,
+			i_Send		=>	w_Send,
+			i_Data_In	=>	w_UART_Din,
+			o_Busy      =>	w_Busy,
+			o_Tx    	=>	o_Tx
+		);
+
 	Edge_Det_Inst2	:	entity work.Edge_Detector
 		generic map( g_Rising_Edge => '1')
 		port map(
@@ -152,110 +141,34 @@ begin
 			o_Result	=>	r_Wr_En
 	);
 	
-	Edge_Det_Inst3	:	entity work.Edge_Detector
-		generic map( g_Rising_Edge => '0')
-		port map(
-			i_Clk		=>	i_Clk_Rd,
-			i_Reset		=>	i_Reset,
-			i_Sig		=>	w_Empty,
-			o_Result	=>	r_Empty
-	);
-
-	process(i_Clk_Rd)
-	begin
-	
-		if (i_Clk_Rd'event and i_Clk_Rd = '1') then
-			w_rd_en	<=	'0';
-			
-			if (w_Empty = '0') then
-				if (w_Busy_UART_FASM = '0' and w_UART_Done = '0') then
-					w_rd_en	<=	'1';	-- first Data
-				elsif (w_Busy_UART_FASM = '0' and w_UART_Done = '1') then
-					w_rd_en	<=	'1';
-				end if;
-			end if;
-			
-		end if;	
-	end process;
-	
-	process(i_Clk_Wr)
-	begin
-	
-		if (i_Clk_Wr'event and i_Clk_Wr = '1') then
-			r_lock	<=	w_full or r_lock;
-		end if;
-	
-	end process;
-	
 	process(i_Clk_Rd, i_Reset)
 	begin
 	
 		if (i_Reset = '1') then
-			first_flag	<=	'0';
-			r_Lock_2	<=	'0';
+			r_State	<=	s0;
 		elsif (i_Clk_Rd'event and i_Clk_Rd = '1') then
-			if (first_flag = '0' and r_Empty = '1') then
-				first_flag	<=	'1';
-			end if;
+			w_rd_en	<=	'0';
 			
-			r_lock_2	<=	(w_Empty or r_lock_2) and (not i_Last) and first_flag;
-		end if;
-	
+			case	r_State	is
+				when	s0		=>
+					if (w_Empty = '0') then
+						r_State	<=	s1;
+					end if;
+				when	s1		=>
+					if (w_Busy_UART_FASM = '0') then
+						w_rd_en	<=	'1';
+						r_State	<=	s2;	
+					end if;
+				when	s2		=>
+					if (w_Busy_UART_FASM = '1') then
+						r_State	<=	s0;
+					end if;
+				when	others	=>	
+					r_State	<=	s0;
+			end case;
+						
+		end if;	
 	end process;
-	
-	
---	process(i_Reset, i_Clk_Rd)
---	begin
-	
---		if (i_Reset = '1') then
-		
---			w_Mux_Slct	<=	'0';
---			r_End_Cntr	<=	0;
---			r_State		<=	s0;
-			
---		elsif (i_Clk_Rd'event and i_Clk_Rd = '1') then
-			
---			w_Send_2	<=	'0';
---			r_Busy		<=	w_Busy;
-			
---			case r_State	is
---				when	s0		=>
---					w_Mux_Slct	<=	'0';
-					
---					if (w_Busy_UART_FASM = '0' and w_UART_Done = '1' and w_Empty = '1' and i_Last = '1') then
---						w_Mux_Slct	<=	'1';
---						r_End_Cntr	<=	0;
---						r_State		<=	s1;
---					end if;
-					
---				when	s1		=>
-				
---					if (w_Busy = '0') then
---						w_Send_2	<=	'1';
---						r_State		<=	s2;							
---					end if;
-				
---				when	s2		=>
-				
---					if (r_End_Cntr < 2) then
---						if (w_Busy = '1') then
---							r_End_Cntr	<=	r_End_Cntr + 1;
---							r_State		<=	s1;	
---						end if;
---					else
---						r_End_Cntr	<=	0;
---						r_State		<=	s3;											
---					end if;
-					
---				when	s3		=>
---					null;				
---				when	others	=>
---					null;
---			end case;		
---		end if;
-	
---	end process;
-	
 		
 	w_Send		<=	w_Send_1 		when w_Mux_Slct = '0' 	else w_Send_2;	
 	w_UART_Din	<=	w_UART_Din_1 	when w_Mux_Slct = '0' 	else w_UART_Din_2(r_End_Cntr);

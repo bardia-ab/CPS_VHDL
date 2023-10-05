@@ -8,9 +8,9 @@ entity CPS_Parallel is
 		g_O2			:	integer	:= 8;	
 		g_Counter_Width	:	integer	:= 10;
 		g_N_Sets		:	integer	:= 15;
-		g_N_Segments	:	integer	:= 268;
+		g_N_Segments	:	integer	:= 96;
 		g_N_Parallel	:	integer	:= 50;
-		g_N_Partial		:	integer	:= 40;
+		g_N_Partial		:	integer	:= 17;
 		g_Frequency		:	integer := 100e6;
 		g_Baud_Rate		:	integer	:= 230400;
 		g_PipeLineStage	:	integer	:= 1
@@ -18,13 +18,14 @@ entity CPS_Parallel is
 	port(
 		i_Clk_In_P	    :	in		std_logic;
 		i_Clk_In_N	    :	in		std_logic;
-		i_Reset		    :	in		std_logic;
-		i_Start		    :	in		std_logic;
-		i_Mode		    :	in		std_logic_vector(1 downto 0);
+		i_Rx			:	in		std_logic;
+--		i_Reset		    :	in		std_logic;
+--		i_Start		    :	in		std_logic;
+--		i_Mode		    :	in		std_logic_vector(1 downto 0);
 		o_Tx		    :	out		std_logic;
-		o_LED_1		    :	out		std_logic
-		-- o_LED_2		    :	out		std_logic
-		-- o_LED_3		    :	out		std_logic
+		o_LED_1		    :	out		std_logic;
+		o_LED_2		    :	out		std_logic;
+		o_LED_3		    :	out		std_logic
 	);
 end entity;
 ---------------------------------
@@ -53,6 +54,7 @@ architecture behavioral of CPS_Parallel is
 	---------------- Debouncer ----------------------
 	signal	w_Reset			:	std_logic;
 	signal	w_Rst_Debouncer	:	std_logic;
+	signal	w_Start			:	std_logic;
 	---------------- CUT ----------------------
 	signal	w_CE_CUT		:	std_logic;
 	signal	w_CUT_Error		:	std_logic;
@@ -72,8 +74,10 @@ architecture behavioral of CPS_Parallel is
 	signal  w_Error_Mux_Out :   std_logic_vector(g_N_Parallel - 1 downto 0);
 	
 	constant	c_UART_Din_Length	:	integer	:= w_Shift_Value'length + g_N_Parallel;
-	signal	r_Mode			:	std_logic_vector(1 downto 0);
+	signal	w_Mode			:	std_logic_vector(1 downto 0);
 	signal	r_UART_Din		:	std_logic_vector(c_UART_Din_Length - 1 downto 0);
+	signal	r_LED_1			:	std_logic;
+	
 	
 	attribute mark_debug	:	string;
 	attribute mark_debug of w_Capture_ILA	:	signal is "True";
@@ -105,16 +109,29 @@ begin
             o_Psdone_2      =>  w_Psdone_2   
         );
 	
-    Debouncer_Inst:	entity work.debounce
+--    Debouncer_Inst:	entity work.debounce
+--		generic map(
+--			clk_freq	=>	g_Frequency,
+--			stable_time	=>	10
+--		)
+--		port map(
+--			clk		=>	w_Clk_100,
+--			reset_n	=>	w_Rst_Debouncer,
+--			button	=>	i_Reset,
+--			result	=>	w_Reset	
+--		);
+
+	Instruction_Cont_Inst	:	entity work.Instruction_Controller
 		generic map(
-			clk_freq	=>	g_Frequency,
-			stable_time	=>	10
+			g_Baud_Rate		=>	g_Baud_Rate,
+			g_Frequency		=>	g_Frequency
 		)
 		port map(
-			clk		=>	w_Clk_100,
-			reset_n	=>	w_Rst_Debouncer,
-			button	=>	i_Reset,
-			result	=>	w_Reset	
+			i_Clk	    	=>	w_Clk_100,
+			i_Data_In	    =>	i_Rx,
+			o_Start		    =>	w_Start,
+			o_Reset		    =>	w_Reset,
+			o_Mode		    =>	w_Mode
 		);
 		
 	FSM_Inst:	entity work.FSM
@@ -131,14 +148,14 @@ begin
 				i_Clk_Sample	=>	w_Clk_Sample,	
 		        i_Psclk1		=>	w_Clk_100,
 		        i_Psclk2		=>	w_Clk_100,
-		        i_Start			=>	i_Start,
+		        i_Start			=>	w_Start,
 		        i_Reset			=>	w_Reset,
 		        i_Locked1		=>	w_Locked_1,
 		        i_Locked2		=>	w_Locked_2,
 		        i_Locked3		=>	w_Locked_3,
 		        i_Psdone1		=>	w_Psdone_1,
 		        i_Psdone2		=>	w_Psdone_2,
-		        i_Mode			=>	r_Mode,
+		        i_Mode			=>	w_Mode,
 		        o_Trigger		=>	w_Trigger,
 		        o_Psen1			=>	w_Psen_1,
 		        o_Psen2			=>	w_Psen_2,
@@ -152,7 +169,7 @@ begin
 		        o_CLR_Cntr		=>	w_CLR_Cntr,
 		        o_Shift_Value	=>	w_Shift_Value,
 		        o_Slct_Mux		=>	w_Slct_Mux,
-		        o_LED1			=>	o_LED_1,
+		        o_LED1			=>	r_LED_1,
 		        o_LED2			=>	open		
 		);
 
@@ -233,11 +250,15 @@ begin
 			i_Clk_Wr	=>	w_Clk_Sample,
 			i_Clk_Rd	=>	w_Clk_100,
 			i_Din		=>	r_UART_Din,
+			i_Reset		=>	w_Reset,
+			i_Last		=>	r_LED_1,
 			i_Wr_En		=>	w_Capture_ILA,
 			o_Wr_Ack	=>	open,
 			o_Full		=>	open,
 			o_Empty		=>	open,
-			o_Tx		=>	o_Tx
+			o_Tx		=>	o_Tx,
+			o_LED_2		=>	o_LED_2,
+			o_LED_3		=>	o_LED_3
 		);
 
 	process(w_Clk_Sample)
@@ -245,9 +266,10 @@ begin
 		w_TD_Enable	<=	w_Trigger;
 	end process;
 	
-	w_Rst_Debouncer	<=	not i_Start;
-	r_Mode			<=	i_Mode;
+--	w_Rst_Debouncer	<=	not i_Start;
+--	r_Mode			<=	i_Mode;
 	w_Capture_ILA	<=	OR_REDUCE(w_Capture);
 	r_UART_Din		<=	w_Shift_Value & w_Capture;
+	o_LED_1			<=	r_LED_1;
 	
 end architecture;
