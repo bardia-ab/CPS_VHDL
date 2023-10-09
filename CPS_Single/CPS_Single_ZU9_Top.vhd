@@ -5,8 +5,8 @@ use unisim.vcomponents.all;
 ------------------------------------
 entity CPS_Single_ZU9_Top is
 	generic(
-		g_O2			:	integer	:= 16;	
-		g_Counter_Width	:	integer	:= 16;
+		g_O2			:	integer	:= 8;	
+		g_Counter_Width	:	integer	:= 10;
 		g_N_Sets		:	integer	:= 15;
 		g_N_Segments	:	integer	:= 1;
 		g_PipeLineStage	:	integer	:= 1;
@@ -42,56 +42,6 @@ end entity;
 ------------------------------------
 architecture behavioral of CPS_Single_ZU9_Top is
 
-	COMPONENT ila_0
-		PORT (
-			clk 	: IN STD_LOGIC;
-			probe0 	: IN STD_LOGIC_VECTOR(0 DOWNTO 0);
-			probe1 	: IN STD_LOGIC_VECTOR(15 DOWNTO 0)
-		);
-	END COMPONENT  ;
-	
-	COMPONENT c_counter_binary_0
-  PORT (
-    CLK : IN STD_LOGIC;
-    CE : IN STD_LOGIC;
-    Q : OUT STD_LOGIC_VECTOR(13 DOWNTO 0)
-  );
-	END COMPONENT;
-
-	COMPONENT fifo_generator_0
-		PORT (
-			srst 		: IN STD_LOGIC;
-			wr_clk 		: IN STD_LOGIC;
-			rd_clk 		: IN STD_LOGIC;
-			din 		: IN STD_LOGIC_VECTOR(15 DOWNTO 0);
-			wr_en 		: IN STD_LOGIC;
-			rd_en 		: IN STD_LOGIC;
-			dout 		: OUT STD_LOGIC_VECTOR(15 DOWNTO 0);
-			full 		: OUT STD_LOGIC;
-			wr_ack 		: OUT STD_LOGIC;
-			empty 		: OUT STD_LOGIC;
-			valid 		: OUT STD_LOGIC;
-			wr_rst_busy : OUT STD_LOGIC;
-			rd_rst_busy : OUT STD_LOGIC
-		);
-	END COMPONENT;
-	
-	COMPONENT vio_0
-  PORT (
-    clk : IN STD_LOGIC;
-    probe_in0 : IN STD_LOGIC_VECTOR(13 DOWNTO 0)
-  );
-
-END COMPONENT;
-
-COMPONENT vio_1
-  PORT (
-    clk : IN STD_LOGIC;
-    probe_in0 : IN STD_LOGIC_VECTOR(13 DOWNTO 0);
-    probe_in1 : IN STD_LOGIC_VECTOR(0 DOWNTO 0);
-    probe_in2 : IN STD_LOGIC_VECTOR(0 DOWNTO 0)
-  );
-END COMPONENT;
 	
 	---------------- PSINCDEC ----------------------
 	signal	w_Psincdec_1	:	std_logic	:= '1';
@@ -171,7 +121,7 @@ begin
 		        i_Locked3		=>	i_Locked_3,
 		        i_Psdone1		=>	i_Psdone_1,
 		        i_Psdone2		=>	i_Psdone_2,
-		        i_Mode			=>	r_Mode,
+		        i_Mode			=>	i_Mode,
 		        o_Trigger		=>	w_Trigger,
 		        o_Psen1			=>	o_Psen_1,
 		        o_Psen2			=>	o_Psen_2,

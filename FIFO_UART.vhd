@@ -111,6 +111,7 @@ begin
 			i_Enable        =>	w_Valid,
 			i_Busy          =>	w_Busy,
 			i_Last			=>	i_Last,
+			i_Empty			=>	w_Empty,
 			o_Send          =>	w_Send_1,
 			o_Data_Out      =>	w_UART_Din_1,
 			o_Busy			=>	w_Busy_UART_FASM,

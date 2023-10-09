@@ -12,6 +12,7 @@ entity UART_FSM is
 		i_Enable		:	in		std_logic;
 		i_Busy			:	in		std_logic;
 		i_Last			:	in		std_logic;
+		i_Empty			:	in		std_logic;
 		o_Send			:	out 	std_logic;
 		o_Data_Out		:	out		std_logic_vector(7 downto 0);
 		o_Busy			:	out		std_logic;
@@ -68,19 +69,19 @@ begin
 			case r_State is
 			
 			when	UART_IDLE		=>
-				r_Busy_Out	<=	'0';
-									
-				if (r_Last_2 = '0' and r_Last = '1') then
-					r_Busy_Out		<=	'1';
-					r_Done			<=	'0';
-					r_END_Cntr		<=	0;
---					r_State			<=	UART_END;
-				elsif (r_Enable = '0' and i_Enable = '1') then
+				r_Busy_Out	<=	'0';				
+				
+				if (r_Enable = '0' and i_Enable = '1') then
 					r_Busy_Out		<=	'1';
 					r_Data_in		<=	i_Data_in;
 					r_Done			<=	'0';
 					r_Cntr			<=	c_Num_Bytes;
 					r_State			<=	UART_SEND;
+				elsif (r_Last = '0' and i_Last = '1' and i_Empty = '1') then
+					r_Busy_Out		<=	'1';
+					r_Done			<=	'0';
+					r_END_Cntr		<=	0;
+					r_State			<=	UART_END;				
 				end if;
 			when	UART_SEND			=>
 				if (i_Busy = '0') then
@@ -105,7 +106,7 @@ begin
 					r_State			<=	UART_END_DECISION;
 				end if;						
 			when	UART_END_DECISION 	=>
-				if (r_END_Cntr < 3) then
+				if (r_END_Cntr < 2) then
 					r_END_Cntr	<=	r_END_Cntr + 1;
 					r_State		<=	UART_END;
 				end if;
