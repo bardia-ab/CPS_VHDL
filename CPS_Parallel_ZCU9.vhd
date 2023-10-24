@@ -93,6 +93,11 @@ architecture behavioral of CPS_Parallel_ZCU9 is
 	signal	r_UART_Din		:	std_logic_vector(c_UART_Din_Length - 1 downto 0);
 	signal	w_LED_1			:	std_logic;
 	
+	attribute DONT_TOUCH	:	string;
+	attribute DONT_TOUCH of w_Error_Mux_Out	:	signal is "True";
+	attribute DONT_TOUCH of w_Slct_Mux		:	signal is "True";
+	attribute DONT_TOUCH of w_Error_Mux_In	:	signal is "True";
+	
 	attribute mark_debug	:	string;
 	attribute mark_debug of w_Capture_ILA	:	signal is "True";
 	attribute mark_debug of w_Capture		:	signal is "True";

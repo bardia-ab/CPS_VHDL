@@ -69,7 +69,7 @@ architecture behavioral of CPS_Parallel is
 	signal	w_Trigger		:	std_logic;
 	signal	w_TD_Enable		:	std_logic;
 	---------------- MUX ---------------------------------
-	signal  w_Error_Mux_In  :   my_array(0 to c_Segments - 1)(g_N_Parallel - 1 downto 0);
+	signal  w_Error_Mux_In  :   my_array(0 to c_Segments - 1)(g_N_Parallel - 1 downto 0)	:= (others => (others => '0'));
 	signal  w_Slct_Mux		:	std_logic_vector(get_log2(c_Segments) downto 0);
 	signal  w_Error_Mux_Out :   std_logic_vector(g_N_Parallel - 1 downto 0);
 	
@@ -78,6 +78,10 @@ architecture behavioral of CPS_Parallel is
 	signal	r_UART_Din		:	std_logic_vector(c_UART_Din_Length - 1 downto 0);
 	signal	r_LED_1			:	std_logic;
 	
+	attribute DONT_TOUCH	:	string;
+	attribute DONT_TOUCH of w_Error_Mux_Out	:	signal is "True";
+	attribute DONT_TOUCH of w_Slct_Mux		:	signal is "True";
+	attribute DONT_TOUCH of w_Error_Mux_In	:	signal is "True";
 	
 	attribute mark_debug	:	string;
 	attribute mark_debug of w_Capture_ILA	:	signal is "True";
@@ -199,7 +203,7 @@ begin
 					);
 			end generate;
 			
-			w_Error_Mux_In(i)(g_N_Parallel - 1 downto g_N_Partial)	<=	(others => '0');
+			--w_Error_Mux_In(i)(g_N_Parallel - 1 downto g_N_Partial)	<=	(others => '0');
 			
 		end generate;
 	end generate;
@@ -256,9 +260,9 @@ begin
 			o_Wr_Ack	=>	open,
 			o_Full		=>	open,
 			o_Empty		=>	open,
-			o_Tx		=>	o_Tx,
-			o_LED_2		=>	o_LED_2,
-			o_LED_3		=>	o_LED_3
+			o_Tx		=>	o_Tx
+--			o_LED_2		=>	o_LED_2,
+--			o_LED_3		=>	o_LED_3
 		);
 
 	process(w_Clk_Sample)
