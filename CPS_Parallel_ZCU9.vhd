@@ -16,9 +16,9 @@ entity CPS_Parallel_ZCU9 is
 		g_PipeLineStage	:	integer	:= 1
 	);
 	port(
-		i_Reset		    :	in		std_logic;
-		i_Start		    :	in		std_logic;
-		i_Mode		    :	in		std_logic_vector(1 downto 0);
+--		i_Reset		    :	in		std_logic;
+--		i_Start		    :	in		std_logic;
+--		i_Mode		    :	in		std_logic_vector(1 downto 0);
 		i_Clk_100       :   in      std_logic;   
         i_Clk_Launch    :   in      std_logic;
         i_Clk_Sample    :   in      std_logic;
@@ -27,7 +27,7 @@ entity CPS_Parallel_ZCU9 is
         i_Locked_3      :   in      std_logic;
         i_Psdone_1      :   in      std_logic;
         i_Psdone_2      :   in      std_logic;
---        i_Rx			:	in		std_logic;
+        i_Rx			:	in		std_logic;
         o_Reset_1       :   out     std_logic;
         o_Reset_2       :   out     std_logic;
         o_Reset_3       :   out     std_logic;
@@ -37,10 +37,10 @@ entity CPS_Parallel_ZCU9 is
         o_Psincdec_2    :   out     std_logic;
         o_UART_Din		:	out		std_logic_vector;
         o_Trigger		:	out		std_logic;
---		o_Tx		    :	out		std_logic;
-		o_LED_1		    :	out		std_logic
-		-- o_LED_2		    :	out		std_logic
-		-- o_LED_3		    :	out		std_logic
+		o_Tx		    :	out		std_logic;
+		o_LED_1		    :	out		std_logic;
+		o_LED_2		    :	out		std_logic;
+		o_LED_3		    :	out		std_logic
 	);
 end entity;
 ---------------------------------
@@ -91,6 +91,7 @@ architecture behavioral of CPS_Parallel_ZCU9 is
 	constant	c_UART_Din_Length	:	integer	:= w_Shift_Value'length + g_N_Parallel;
 	signal	w_Mode			:	std_logic_vector(1 downto 0);
 	signal	r_UART_Din		:	std_logic_vector(c_UART_Din_Length - 1 downto 0);
+	signal	w_LED_1			:	std_logic;
 	
 	attribute mark_debug	:	string;
 	attribute mark_debug of w_Capture_ILA	:	signal is "True";
@@ -101,6 +102,19 @@ architecture behavioral of CPS_Parallel_ZCU9 is
 
 begin
 		
+	Instruction_Cont_Inst	:	entity work.Instruction_Controller
+		generic map(
+			g_Baud_Rate		=>	g_Baud_Rate,
+			g_Frequency		=>	g_Frequency
+		)
+		port map(
+			i_Clk	    	=>	i_Clk_100,
+			i_Data_In	    =>	i_Rx,
+			o_Start		    =>	w_Start,
+			o_Reset		    =>	w_Reset,
+			o_Mode		    =>	w_Mode
+		);
+	
 	FSM_Inst:	entity work.FSM
 		generic map(
 			g_O2			=>	g_O2,	
@@ -136,7 +150,7 @@ begin
 		        o_CLR_Cntr		=>	w_CLR_Cntr,
 		        o_Shift_Value	=>	w_Shift_Value,
 		        o_Slct_Mux		=>	w_Slct_Mux,
-		        o_LED1			=>	o_LED_1,
+		        o_LED1			=>	w_LED_1,
 		        o_LED2			=>	open		
 		);
 
@@ -218,7 +232,27 @@ begin
 			o_Output	=>	w_Error_Mux_Out
 		);
 	
-
+	FIFO_UART_Inst	:	entity work.FIFO_UART
+		generic map(
+			g_Data_Width	=>	r_UART_Din'length,
+			g_Parity		=>	"0",
+			g_Data_Bits		=>	8,
+			g_Baud_Rate		=>	g_Baud_Rate,
+			g_Frequency		=>	g_Frequency
+		)
+		port map(
+			i_Clk_Wr	=>	i_Clk_Sample,
+			i_Clk_Rd	=>	i_Clk_100,
+			i_Reset		=>	w_Reset,
+			i_Din		=>	r_UART_Din,
+			i_Wr_En		=>	w_Capture_ILA,
+			i_Last		=>	w_LED_1,
+			o_Wr_Ack	=>	open,
+			o_Full		=>	o_LED_2,
+			o_Empty		=>	o_LED_3,
+			o_Tx		=>	o_Tx
+		);
+		
 	process(w_Clk_Sample)
 	begin
 		w_TD_Enable	<=	w_Trigger;
@@ -229,7 +263,8 @@ begin
 	w_Capture_ILA	<=	OR_REDUCE(w_Capture);
 	r_UART_Din		<=	w_Shift_Value & w_Capture;
 	o_UART_Din		<=	r_UART_Din;
-	o_Trigger		<=	w_Capture_ILA;
+--	o_Trigger		<=	w_Capture_ILA;
+	o_LED_1			<=	w_LED_1;		
 	
 	o_Reset_1		<=	w_Reset_1;
 	o_Reset_2       <=	w_Reset_2;
@@ -238,9 +273,9 @@ begin
 	o_Psen_2        <=	w_Psen_2;
 	o_Psincdec_1    <=	w_Psincdec_1;
 	o_Psincdec_2    <=	w_Psincdec_2;
-	w_Start		    <=	i_Start;
-	w_Reset		    <=	i_Reset;
-	w_Mode		    <=	i_Mode;
+--	w_Start		    <=	i_Start;
+--	w_Reset		    <=	i_Reset;
+--	w_Mode		    <=	i_Mode;
 	w_Clk_100       <=	i_Clk_100;
 	w_Clk_Launch    <=	i_Clk_Launch;
 	w_Clk_Sample    <=	i_Clk_Sample;

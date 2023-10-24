@@ -22,9 +22,7 @@ ENTITY FIFO_UART IS
 		o_Wr_Ack	:	out		std_logic;
 		o_Full		:	out		std_logic;
 		o_Empty		:	out		std_logic;
-		o_Tx		:	out		std_logic;
-		o_LED_2		:	out		std_logic;
-		o_LED_3		:	out		std_logic
+		o_Tx		:	out		std_logic
 	);
 END ENTITY;
 -------------------------------
@@ -75,14 +73,6 @@ architecture rtl of FIFO_UART is
 	signal	w_UART_Done			:	std_logic;
 	signal	r_UART_Done			:	std_logic;
 	signal	w_Busy_UART_FASM	:	std_logic;
-	
-	signal	w_Mux_Slct			:	std_logic				:= '0';
-	signal	r_End_Cntr			:	integer	range 0 to 2	:= 0;
-	signal	r_lock				:	std_logic				:= '0';
-	signal	r_lock_2			:	std_logic				:= '0';
-	signal	first_flag			:	std_logic				:= '0';
-	signal	r_LED_2				:	std_logic				:= '0';
-	signal	r_LED_3				:	std_logic				:= '0';
 		
 begin
 
@@ -112,8 +102,8 @@ begin
 			i_Busy          =>	w_Busy,
 			i_Last			=>	i_Last,
 			i_Empty			=>	w_Empty,
-			o_Send          =>	w_Send_1,
-			o_Data_Out      =>	w_UART_Din_1,
+			o_Send          =>	w_Send,
+			o_Data_Out      =>	w_UART_Din,
 			o_Busy			=>	w_Busy_UART_FASM,
 			o_Done          =>	w_UART_Done
 		);
@@ -171,16 +161,10 @@ begin
 		end if;	
 	end process;
 		
-	w_Send		<=	w_Send_1 		when w_Mux_Slct = '0' 	else w_Send_2;	
-	w_UART_Din	<=	w_UART_Din_1 	when w_Mux_Slct = '0' 	else w_UART_Din_2(r_End_Cntr);
+
 	
 	o_Wr_Ack	<=	w_Wr_Ack;
 	o_Empty		<=	w_Empty;
 	o_Full		<=	w_Full;
---	o_Full		<=	r_lock;
-	o_LED_2		<=	r_lock;
-	o_LED_3		<=	r_lock_2;
---	o_LED_2		<=	r_LED_2;
---	o_LED_3		<=	r_LED_3;
 	
 end architecture;

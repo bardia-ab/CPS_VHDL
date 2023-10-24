@@ -77,7 +77,7 @@ begin
 					r_Done			<=	'0';
 					r_Cntr			<=	c_Num_Bytes;
 					r_State			<=	UART_SEND;
-				elsif (r_Last = '0' and i_Last = '1' and i_Empty = '1') then
+				elsif (i_Last = '1' and i_Empty = '1') then
 					r_Busy_Out		<=	'1';
 					r_Done			<=	'0';
 					r_END_Cntr		<=	0;

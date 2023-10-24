@@ -19,10 +19,10 @@ entity top is
 		g_PipeLineStage	:	integer	:= 1
 	);
 	port(
-		i_Reset		    :	in		std_logic;
-		i_Start		    :	in		std_logic;
-		i_Mode		    :	in		std_logic_vector(1 downto 0);
---		i_Rx			:	in		std_logic;
+--		i_Reset		    :	in		std_logic;
+--		i_Start		    :	in		std_logic;
+--		i_Mode		    :	in		std_logic_vector(1 downto 0);
+		i_Rx			:	in		std_logic;
 		i_Clk_100       :   in      std_logic;   
         i_Clk_Launch    :   in      std_logic;
         i_Clk_Sample    :   in      std_logic;
@@ -72,10 +72,10 @@ begin
 		    g_PipeLineStage	=>	g_PipeLineStage
 		)
 		port map(
-			i_Reset		 	=>	i_Reset,		 
-			i_Start		    =>	i_Start,		 
-			i_Mode		    =>	i_Mode,	
---			i_Rx			=>	i_Rx,	 
+--			i_Reset		 	=>	i_Reset,		 
+--			i_Start		    =>	i_Start,		 
+--			i_Mode		    =>	i_Mode,	
+			i_Rx			=>	i_Rx,	 
 			i_Clk_100       =>	i_Clk_100,    
 			i_Clk_Launch    =>	i_Clk_Launch, 
 			i_Clk_Sample    =>	i_Clk_Sample, 
@@ -93,72 +93,52 @@ begin
 		    o_Psincdec_2    =>	o_Psincdec_2, 
 		    o_UART_Din		=>	r_UART_Din,
 		    o_Trigger		=>	r_Trigger,
---		    o_Tx		    =>	o_Tx,		 
+		    o_Tx		    =>	o_Tx,		 
 		    o_LED_1		    =>	w_LED_1		 
 		);
 
-	FIFO_UART_Inst	:	entity work.FIFO_UART
-		generic map(
-			g_Data_Width	=>	r_UART_Din'length,
-			g_Parity		=>	"0",
-			g_Data_Bits		=>	8,
-			g_Baud_Rate		=>	g_Baud_Rate,
-			g_Frequency		=>	g_Frequency
-		)
-		port map(
-			i_Clk_Wr	=>	i_Clk_Sample,
-			i_Clk_Rd	=>	i_Clk_100,
-			i_Reset		=>	i_Reset,
-			i_Din		=>	r_UART_Din,
-			i_Wr_En		=>	r_Trigger,
-			i_Last		=>	w_LED_1,
-			o_Wr_Ack	=>	open,
-			o_Full		=>	open,
-			o_Empty		=>	open,
-			o_Tx		=>	o_Tx,
-			o_LED_2		=>	o_LED_2,
-			o_LED_3		=>	o_LED_3
-		);
+
+
 		
 	
-	Dummy_Srcs: for k in 0 to (g_N_Dummy_Src - 1) generate
+--	Dummy_Srcs: for k in 0 to (g_N_Dummy_Src - 1) generate
 	
-		launch_FF : FDCE
-			generic map (
-				INIT 				=> '0',		-- Initial value of register, '0', '1'
-				-- Programmable Inversion Attributes: Specifies the use of the built-in programmable inversion
-				IS_CLR_INVERTED 	=> '0', 	-- Optional inversion for CLR
-				IS_C_INVERTED 		=> '0', 	-- Optional inversion for C
-				IS_D_INVERTED 		=> '0' 		-- Optional inversion for D
-			)
-			port map (
-				Q 					=> 		r_Dummy(k), 	-- 1-bit output: Data
-				C 					=> 		i_Clk_Launch, 	-- 1-bit input: Clock
-				CE 					=> 		'1', 			-- 1-bit input: Clock enable
-				CLR 				=> 		'0', 			-- 1-bit input: Asynchronous clear
-				D 					=> 		'1' 			-- 1-bit input: Data
-			);
-	end generate;
+--		launch_FF : FDCE
+--			generic map (
+--				INIT 				=> '0',		-- Initial value of register, '0', '1'
+--				-- Programmable Inversion Attributes: Specifies the use of the built-in programmable inversion
+--				IS_CLR_INVERTED 	=> '0', 	-- Optional inversion for CLR
+--				IS_C_INVERTED 		=> '0', 	-- Optional inversion for C
+--				IS_D_INVERTED 		=> '0' 		-- Optional inversion for D
+--			)
+--			port map (
+--				Q 					=> 		r_Dummy(k), 	-- 1-bit output: Data
+--				C 					=> 		i_Clk_Launch, 	-- 1-bit input: Clock
+--				CE 					=> 		'1', 			-- 1-bit input: Clock enable
+--				CLR 				=> 		'0', 			-- 1-bit input: Asynchronous clear
+--				D 					=> 		'1' 			-- 1-bit input: Data
+--			);
+--	end generate;
 	
 	
-	Dummy_Sinks: for k in 0 to (g_N_Dummy_Sink - 1) generate
+--	Dummy_Sinks: for k in 0 to (g_N_Dummy_Sink - 1) generate
 	
-		sample_FF : FDCE
-			generic map (
-				INIT 				=> '0',		-- Initial value of register, '0', '1'
-				-- Programmable Inversion Attributes: Specifies the use of the built-in programmable inversion
-				IS_CLR_INVERTED 	=> '0', 	-- Optional inversion for CLR
-				IS_C_INVERTED 		=> '1', 	-- Optional inversion for C
-				IS_D_INVERTED 		=> '0' 		-- Optional inversion for D
-			)
-			port map (
-				Q 					=> 		r_Dummy(k + g_N_Dummy_Src), 	-- 1-bit output: Data
-				C 					=> 		i_Clk_Sample, 	-- 1-bit input: Clock
-				CE 					=> 		'1', 			-- 1-bit input: Clock enable
-				CLR 				=> 		'1', 			-- 1-bit input: Asynchronous clear
-				D 					=> 		'1' 	-- 1-bit input: Data
-			);
-	end generate;
+--		sample_FF : FDCE
+--			generic map (
+--				INIT 				=> '0',		-- Initial value of register, '0', '1'
+--				-- Programmable Inversion Attributes: Specifies the use of the built-in programmable inversion
+--				IS_CLR_INVERTED 	=> '0', 	-- Optional inversion for CLR
+--				IS_C_INVERTED 		=> '1', 	-- Optional inversion for C
+--				IS_D_INVERTED 		=> '0' 		-- Optional inversion for D
+--			)
+--			port map (
+--				Q 					=> 		r_Dummy(k + g_N_Dummy_Src), 	-- 1-bit output: Data
+--				C 					=> 		i_Clk_Sample, 	-- 1-bit input: Clock
+--				CE 					=> 		'1', 			-- 1-bit input: Clock enable
+--				CLR 				=> 		'1', 			-- 1-bit input: Asynchronous clear
+--				D 					=> 		'1' 	-- 1-bit input: Data
+--			);
+--	end generate;
 	
 	o_LED_1	<=	w_LED_1;	
 	
