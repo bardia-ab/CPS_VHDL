@@ -25,6 +25,7 @@ entity FSM is
 		i_Psdone1		:	in		std_logic;
 		i_Psdone2		:	in		std_logic;
 		i_Mode			:	in		std_logic_vector(1 downto 0);
+		i_Stop_PS		:	in		std_logic	:= '0';
 		o_Trigger		:	out		std_logic;
 		o_Psen1			:	out		std_logic;
 		o_Psen2			:	out		std_logic;

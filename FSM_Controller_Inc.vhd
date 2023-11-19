@@ -19,6 +19,7 @@ entity FSM_Controller_Inc is
 		i_Done_CUT		:	in		std_logic;
 		i_Done_CM1		:	in		std_logic;
 		i_Done_CM2		:	in		std_logic;
+		i_Stop_PS		:	in		std_logic	:= '0';
 		o_Reset1		:	out		std_logic;
 		o_Reset2		:	out		std_logic;
 		o_Reset3		:	out		std_logic;
@@ -95,7 +96,7 @@ begin
 			
 			when	s_Shift	=>
 			
-				if (r_Done_CM1 = '1') then
+				if (r_Done_CM1 = '1' and i_Stop_PS = '0') then
 					r_Shift_Cntr	<=	r_Shift_Cntr - 1;
 					r_En_CUT		<=	'0';
 					r_LED1			<=	'0';
