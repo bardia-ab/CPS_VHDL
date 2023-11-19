@@ -39,7 +39,7 @@ architecture behavioral of FSM_Controller_Inc is
 	--------------- Constants ---------------------	
 	constant	c_N_Shifts	:	integer	:= 56 * g_O2 * g_N_Sets - 1;
 	--------------- States ---------------------
-	type t_my_type is (s_Shift, s_Reset, s_Enable_CUT);
+	type t_my_type is (s_Shift, s_Delay, s_Decision, s_Next_Segment, s_Reset, s_Enable_CUT);
 	signal	r_State	:	t_my_type	:= s_Shift;
 	--------------- Counters ---------------------
 	signal	r_Shift_Cntr	:	unsigned(get_log2(c_N_Shifts) downto 0) 	:= to_unsigned(c_N_Shifts, get_log2(c_N_Shifts) + 1);
@@ -55,8 +55,8 @@ architecture behavioral of FSM_Controller_Inc is
 	signal	r_LED2		:	std_logic	:= '0';
 	
 	attribute mark_debug	:	string;
-	attribute mark_debug of r_Shift_Cntr	:	signal is "True";
-	attribute mark_debug of r_Segment_Cntr	:	signal is "True";
+	-- attribute mark_debug of r_Shift_Cntr	:	signal is "True";
+	-- attribute mark_debug of r_Segment_Cntr	:	signal is "True";
 	--attribute mark_debug of r_LED1			:	signal is "True";
 
 begin
@@ -99,31 +99,36 @@ begin
 					r_Shift_Cntr	<=	r_Shift_Cntr - 1;
 					r_En_CUT		<=	'0';
 					r_LED1			<=	'0';
-					r_State			<=	s_Reset;
+					r_State			<=	s_Delay;
 				end if;
 				
-			when	s_Reset	=>
-				r_State			<=	s_Enable_CUT;
-				
+			when	s_Delay		=>
+				r_State			<=	s_Decision;
+
+			when	s_Decision	=>
 				if (r_Shift_Cntr = to_unsigned(0, r_Shift_Cntr'length)) then
-					if (r_Segment_Cntr < g_N_Segments - 1) then
-						r_Shift_Cntr	<=	to_unsigned(c_N_Shifts, r_Shift_Cntr'length);
-						r_Segment_Cntr	<=	r_Segment_Cntr + 1;
-						r_Reset1		<=	'1';
-						r_Reset2		<=	'1';
-						r_Reset3		<=	'1';
-						r_LED2			<=	'1';
-					else
-						r_Shift_Cntr	<=	to_unsigned(c_N_Shifts, r_Shift_Cntr'length);
-						r_Segment_Cntr	<=	(others => '0');
---						r_Reset1		<=	'1';
---						r_Reset2		<=	'1';
---						r_Reset3		<=	'1';
-						r_LED1			<=	'1';
-						r_State			<=	s_Shift;
-					end if;
+					r_Shift_Cntr	<=	to_unsigned(c_N_Shifts, r_Shift_Cntr'length);
+					r_State			<=	s_Next_Segment;
+				else
+					r_State			<=	s_Enable_CUT;
 				end if;
 			
+			when	s_Next_Segment	=>
+				if (r_Segment_Cntr < g_N_Segments - 1) then
+					r_Segment_Cntr	<=	r_Segment_Cntr + 1;
+					r_LED2			<=	'1';
+					r_State			<=	s_Reset;
+				else
+					r_Segment_Cntr	<=	(others => '0');
+					r_LED1			<=	'1';
+					r_State			<=	s_Shift;
+				end if;
+
+			when s_Reset =>
+				r_Reset1		<=	'1';
+				r_Reset2		<=	'1';
+				r_Reset3		<=	'1';
+				r_State			<=	s_Enable_CUT;
 			when	s_Enable_CUT	=>
 			
 				if (i_Locked1 = '1' and i_Locked2 = '1' and i_Locked3 = '1') then
