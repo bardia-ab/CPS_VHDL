@@ -118,6 +118,7 @@ begin
 		i_Done_CUT		=>	r_Done_CUT,
 		i_Done_CM1		=>	r_Done_CM1,
 		i_Done_CM2		=>	r_Done_CM2,
+		i_Stop_PS		=>	i_Stop_PS,
 		o_Reset1		=>	o_Reset1,
 		o_Reset2		=>	o_Reset2,
 		o_Reset3		=>	o_Reset3,

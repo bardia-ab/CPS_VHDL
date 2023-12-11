@@ -40,6 +40,8 @@ end entity;
 ---------------------------------
 architecture behavioral of Metastability_Attack is
 
+	type t_array_1 is array (0 to g_N_Parallel - 1) of std_logic_vector(g_Counter_Width - 1 downto 0);
+	
 	constant c_Segments		:	integer	:= cal_segment(g_N_Segments, g_N_Partial);
 	---------------- Clock Buffers ----------------------
 	signal	w_Clk_100	:	std_logic;
@@ -71,9 +73,9 @@ architecture behavioral of Metastability_Attack is
 	signal	w_CE_Cntr		:	std_logic;
 	signal	w_CLR_Cntr		:	std_logic;
 	--------------- Debug ------------------
-	signal	w_Error_Cntr	:	std_logic_vector(g_Counter_Width - 1 downto 0);
+	signal	w_Error_Cntr	:	t_array_1;
 	signal	w_Shift_Value	:	std_logic_vector(get_log2(56 * g_O2 * g_N_Sets) downto 0);
-	signal	w_Capture		:	std_logic;
+	signal	w_Capture		:	std_logic_vector(g_N_parallel - 1 downto 0);
 	signal	w_Capture_ILA   :   std_logic;
 	signal	w_Trigger		:	std_logic;
 	signal	w_TD_Enable		:	std_logic;
@@ -85,6 +87,10 @@ architecture behavioral of Metastability_Attack is
 	signal	r_UART_Din		:	std_logic_vector(c_UART_Din_Length - 1 downto 0);
 	signal	w_LED_1			:	std_logic;
     signal  r_Stop_PS       :   std_logic   := '0';
+    
+    attribute dont_touch	:	string;
+    attribute dont_touch of w_Error	:	signal is "True";
+    attribute dont_touch of w_Error_Cntr	:	signal is "True";
 
 begin
 		
@@ -150,9 +156,8 @@ begin
                 i_CLR        	=>  '0',
                 o_Error			=>	w_Error(j) 
             );
-	end generate;
-		
-    ORA_Inst:	entity work.ORA
+            
+		ORA_Inst:	entity work.ORA
         generic map(
             g_Width	=>	g_Counter_Width
         )
@@ -160,25 +165,28 @@ begin
             i_Clk_Sample	=>	w_Clk_Sample,
             i_Clk_Launch	=>	w_Clk_Launch,
             i_CE	        =>	w_CE_Cntr,
-            i_input	        =>	w_Error(0),
+            i_input	        =>	w_Error(j),
             i_SCLR	        =>	w_CLR_Cntr,
-            o_Q		        =>	w_Error_Cntr
+            o_Q		        =>	w_Error_Cntr(j)
         );
-    
-    Threshold_Detector_inst	:	entity work.Threshold_Detector
+        
+	  Threshold_Detector_inst	:	entity work.Threshold_Detector
         generic map (g_Rising_Edge => '1')
         port map(
             i_Clk			=>	w_Clk_Sample,
             i_Enable		=>	w_TD_Enable,
             i_Reset			=>	w_Reset_1,
-            i_Sig			=>	w_Error_Cntr(g_Counter_Width - 1),
-            o_Capture		=>	w_Capture
+            i_Sig			=>	w_Error_Cntr(j)(g_Counter_Width - 1),
+            o_Capture		=>	w_Capture(j)
         );
+	end generate;
+		
+    
 		
 	process(w_Clk_Sample)
     begin
         if rising_edge(w_Clk_Sample) then
-            if (w_Capture = '1') then
+            if (or_reduce(w_Capture) = '1') then
                 r_Stop_PS   <=  '1';
             end if;
         end if;
