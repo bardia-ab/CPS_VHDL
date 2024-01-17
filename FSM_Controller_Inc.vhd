@@ -87,7 +87,7 @@ begin
                         r_State <=  s_ENABLE_CUT;
                     end if;
                 when    s_NEXT_SEGMENT  =>
-                    if (r_Segment_Cntr = (g_N_Segments - 1)) then
+                    if (r_Segment_Cntr = g_N_Segments) then
                         r_State     <=  s_END;
                     else
                         r_Reset1	<=	'1';
