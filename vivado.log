@@ -1,0 +1,98 @@
+#-----------------------------------------------------------
+# Vivado v2021.1 (64-bit)
+# SW Build 3247384 on Thu Jun 10 19:36:07 MDT 2021
+# IP Build 3246043 on Fri Jun 11 00:30:35 MDT 2021
+# Start of session at: Wed Jan 17 15:39:30 2024
+# Process ID: 3259400
+# Current directory: /mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL
+# Command line: vivado
+# Log file: /mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/vivado.log
+# Journal file: /mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/vivado.jou
+#-----------------------------------------------------------
+start_gui
+open_project /mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_Parallel_ZCU9/CPS_Parallel_ZCU9.xpr
+WARNING: [filemgmt 56-3] Board Part Repository Path: Could not find the directory '/mnt/AppData/Roaming/Xilinx/Vivado/2021.1/xhub/board_store/xilinx_board_store'.
+Scanning sources...
+Finished scanning sources
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/mnt/bigDrive4tb/Vivado/2021.1/data/ip'.
+INFO: [IP_Flow 19-3899] Cannot get the environment domain name variable for the component vendor name. Setting the vendor name to 'user.org'.
+open_project: Time (s): cpu = 00:00:17 ; elapsed = 00:00:06 . Memory (MB): peak = 7665.949 ; gain = 94.219 ; free physical = 26243 ; free virtual = 165387
+ERROR: [HDL 9-806] Syntax error near "<". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:74]
+ERROR: [HDL 9-806] Syntax error near "=". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:110]
+ERROR: [HDL 9-806] Syntax error near "then". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:116]
+ERROR: [HDL 9-806] Syntax error near "if". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:121]
+ERROR: [HDL 9-806] Syntax error near "when". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:126]
+ERROR: [HDL 9-806] Syntax error near "then". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:127]
+ERROR: [HDL 9-806] Syntax error near "else". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:130]
+ERROR: [HDL 9-806] Syntax error near "if". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:132]
+ERROR: [HDL 9-806] Syntax error near "then". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:135]
+ERROR: [HDL 9-806] Syntax error near "else". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:139]
+ERROR: [HDL 9-806] Syntax error near "if". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:143]
+ERROR: [HDL 9-806] Syntax error near "<". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:74]
+ERROR: [HDL 9-806] Syntax error near "=". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:110]
+ERROR: [HDL 9-806] Syntax error near "then". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:116]
+ERROR: [HDL 9-806] Syntax error near "if". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:121]
+ERROR: [HDL 9-806] Syntax error near "when". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:126]
+ERROR: [HDL 9-806] Syntax error near "then". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:127]
+ERROR: [HDL 9-806] Syntax error near "else". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:130]
+ERROR: [HDL 9-806] Syntax error near "if". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:132]
+ERROR: [HDL 9-806] Syntax error near "then". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:135]
+ERROR: [HDL 9-806] Syntax error near "else". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:139]
+ERROR: [HDL 9-806] Syntax error near "if". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:143]
+update_compile_order -fileset sources_1
+update_module_reference design_1_top_0_0
+ERROR: [HDL 9-806] Syntax error near "<". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:74]
+ERROR: [HDL 9-806] Syntax error near "=". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:110]
+ERROR: [HDL 9-806] Syntax error near "then". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:116]
+ERROR: [HDL 9-806] Syntax error near "if". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:121]
+ERROR: [HDL 9-806] Syntax error near "when". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:126]
+ERROR: [HDL 9-806] Syntax error near "then". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:127]
+ERROR: [HDL 9-806] Syntax error near "else". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:130]
+ERROR: [HDL 9-806] Syntax error near "if". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:132]
+ERROR: [HDL 9-806] Syntax error near "then". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:135]
+ERROR: [HDL 9-806] Syntax error near "else". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:139]
+ERROR: [HDL 9-806] Syntax error near "if". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:143]
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+Reading block design file </mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_Parallel_ZCU9/CPS_Parallel_ZCU9.srcs/sources_1/bd/design_1/design_1.bd>...
+Adding component instance block -- xilinx.com:ip:zynq_ultra_ps_e:3.3 - zynq_ultra_ps_e_0
+Adding component instance block -- xilinx.com:ip:clk_wiz:6.0 - clk_wiz_0
+Adding component instance block -- xilinx.com:ip:clk_wiz:6.0 - clk_wiz_1
+Adding component instance block -- xilinx.com:ip:clk_wiz:6.0 - clk_wiz_2
+Adding component instance block -- xilinx.com:module_ref:top:1.0 - top_0
+Successfully read diagram <design_1> from block design file </mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_Parallel_ZCU9/CPS_Parallel_ZCU9.srcs/sources_1/bd/design_1/design_1.bd>
+Upgrading '/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_Parallel_ZCU9/CPS_Parallel_ZCU9.srcs/sources_1/bd/design_1/design_1.bd'
+INFO: [IP_Flow 19-1972] Upgraded design_1_top_0_0 from top_v1_0 1.0 to top_v1_0 1.0
+Wrote  : </mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_Parallel_ZCU9/CPS_Parallel_ZCU9.srcs/sources_1/bd/design_1/design_1.bd> 
+update_module_reference: Time (s): cpu = 00:00:15 ; elapsed = 00:00:05 . Memory (MB): peak = 9109.086 ; gain = 1229.387 ; free physical = 24467 ; free virtual = 163621
+ERROR: [Common 17-39] 'update_module_reference' failed due to earlier errors.
+ERROR: [HDL 9-806] Syntax error near "<". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:74]
+ERROR: [HDL 9-806] Syntax error near "=". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:110]
+ERROR: [HDL 9-806] Syntax error near "then". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:116]
+ERROR: [HDL 9-806] Syntax error near "if". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:121]
+ERROR: [HDL 9-806] Syntax error near "when". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:126]
+ERROR: [HDL 9-806] Syntax error near "then". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:127]
+ERROR: [HDL 9-806] Syntax error near "else". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:130]
+ERROR: [HDL 9-806] Syntax error near "if". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:132]
+ERROR: [HDL 9-806] Syntax error near "then". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:135]
+ERROR: [HDL 9-806] Syntax error near "else". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:139]
+ERROR: [HDL 9-806] Syntax error near "if". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:143]
+ERROR: [HDL 9-806] Syntax error near "<". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:74]
+ERROR: [HDL 9-806] Syntax error near "=". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:110]
+ERROR: [HDL 9-806] Syntax error near "then". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:116]
+ERROR: [HDL 9-806] Syntax error near "if". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:121]
+ERROR: [HDL 9-806] Syntax error near "when". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:126]
+ERROR: [HDL 9-806] Syntax error near "then". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:127]
+ERROR: [HDL 9-806] Syntax error near "else". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:130]
+ERROR: [HDL 9-806] Syntax error near "if". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:132]
+ERROR: [HDL 9-806] Syntax error near "then". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:135]
+ERROR: [HDL 9-806] Syntax error near "else". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:139]
+ERROR: [HDL 9-806] Syntax error near "if". [/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/FSM_Controller_Inc.vhd:143]
+update_module_reference design_1_top_0_0
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+Upgrading '/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_Parallel_ZCU9/CPS_Parallel_ZCU9.srcs/sources_1/bd/design_1/design_1.bd'
+INFO: [IP_Flow 19-1972] Upgraded design_1_top_0_0 from top_v1_0 1.0 to top_v1_0 1.0
+Wrote  : </mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_Parallel_ZCU9/CPS_Parallel_ZCU9.srcs/sources_1/bd/design_1/design_1.bd> 

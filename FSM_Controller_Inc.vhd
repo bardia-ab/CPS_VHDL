@@ -19,6 +19,7 @@ entity FSM_Controller_Inc is
 		i_Done_CUT		:	in		std_logic;
 		i_Done_CM1		:	in		std_logic;
 		i_Done_CM2		:	in		std_logic;
+		i_Stop_PS		:	in		std_logic	:= '0';
 		o_Reset1		:	out		std_logic;
 		o_Reset2		:	out		std_logic;
 		o_Reset3		:	out		std_logic;
@@ -105,6 +106,7 @@ begin
             end case;
         end if;
     end process;
+
 
     o_Reset1		<=	r_Reset1;
 	o_Reset2    	<=	r_Reset2;

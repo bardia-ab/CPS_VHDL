@@ -1,7 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use work.my_package.all;
+--use work.my_package.all;
 use	IEEE.math_real.all;
 -------------------------------
 ENTITY FIFO_UART IS
@@ -69,10 +69,12 @@ architecture rtl of FIFO_UART is
 	signal	r_Send_2			:	std_logic;
 	signal	w_UART_Din			:	std_logic_vector(7 downto 0);
 	signal	w_UART_Din_1		:	std_logic_vector(7 downto 0);
-	signal	w_UART_Din_2		:	my_array(0 to 2)(7 downto 0)	:= (x"45", x"4E", x"44");
+--	signal	w_UART_Din_2		:	my_array(0 to 2)(7 downto 0)	:= (x"45", x"4E", x"44");
 	signal	w_UART_Done			:	std_logic;
 	signal	r_UART_Done			:	std_logic;
 	signal	w_Busy_UART_FASM	:	std_logic;
+	
+	signal	w_Full_Lock			:	std_logic	:= '0';
 		
 begin
 
@@ -161,10 +163,16 @@ begin
 		end if;	
 	end process;
 		
-
+	process(i_Clk_Wr)
+	begin
+		if rising_edge(i_Clk_Wr) then
+			w_Full_Lock	<=	w_Full_Lock or w_Full;
+		end if;
+	
+	end process;
 	
 	o_Wr_Ack	<=	w_Wr_Ack;
 	o_Empty		<=	w_Empty;
-	o_Full		<=	w_Full;
+	o_Full		<=	w_Full_Lock;
 	
 end architecture;

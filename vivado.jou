@@ -1,0 +1,16 @@
+#-----------------------------------------------------------
+# Vivado v2021.1 (64-bit)
+# SW Build 3247384 on Thu Jun 10 19:36:07 MDT 2021
+# IP Build 3246043 on Fri Jun 11 00:30:35 MDT 2021
+# Start of session at: Wed Jan 17 15:39:30 2024
+# Process ID: 3259400
+# Current directory: /mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL
+# Command line: vivado
+# Log file: /mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/vivado.log
+# Journal file: /mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/vivado.jou
+#-----------------------------------------------------------
+start_gui
+open_project /mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_Parallel_ZCU9/CPS_Parallel_ZCU9.xpr
+update_compile_order -fileset sources_1
+update_module_reference design_1_top_0_0
+update_module_reference design_1_top_0_0

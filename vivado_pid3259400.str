@@ -1,0 +1,273 @@
+/*
+
+Xilinx Vivado v2021.1 (64-bit) [Major: 2021, Minor: 1]
+SW Build: 3247384 on Thu Jun 10 19:36:07 MDT 2021
+IP Build: 3246043 on Fri Jun 11 00:30:35 MDT 2021
+
+Process ID (PID): 3259400
+License: Customer
+Mode: GUI Mode
+
+Current time: 	Wed Jan 17 15:39:47 GMT 2024
+Time zone: 	Greenwich Mean Time (Europe/London)
+
+OS: Ubuntu
+OS Version: 5.4.0-166-generic
+OS Architecture: amd64
+Available processors (cores): 12
+
+Display: 0
+Screen size: 2560x1440
+Screen resolution (DPI): 100
+Available screens: 2
+Default font: family=Dialog,name=Dialog,style=plain,size=12
+Scale size: 12
+
+Java version: 	11.0.2 64-bit
+Java home: 	/mnt/bigDrive4tb/Vivado/2021.1/tps/lnx64/jre11.0.2
+Java executable: 	/mnt/bigDrive4tb/Vivado/2021.1/tps/lnx64/jre11.0.2/bin/java
+Java initial memory (-Xms): 	256 MB
+Java maximum memory (-Xmx):	 3 GB
+
+
+User name: 	bardia
+User home directory: /home/bardia
+User working directory: /mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL
+User country: 	US
+User language: 	en
+User locale: 	en_US
+
+RDI_BASEROOT: /mnt/bigDrive4tb/Vivado
+HDI_APPROOT: /mnt/bigDrive4tb/Vivado/2021.1
+RDI_DATADIR: /mnt/bigDrive4tb/Vivado/2021.1/data
+RDI_BINDIR: /mnt/bigDrive4tb/Vivado/2021.1/bin
+
+Vivado preferences file: /home/bardia/.Xilinx/Vivado/2021.1/vivado.xml
+Vivado preferences directory: /home/bardia/.Xilinx/Vivado/2021.1/
+Vivado layouts directory: /home/bardia/.Xilinx/Vivado/2021.1/data/layouts
+PlanAhead jar file: 	/mnt/bigDrive4tb/Vivado/2021.1/lib/classes/planAhead.jar
+Vivado log file: 	/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/vivado.log
+Vivado journal file: 	/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_VHDL/vivado.jou
+Engine tmp dir: 	./.Xil/Vivado-3259400-fpga-anuj
+
+Xilinx Environment Variables
+----------------------------
+J2SDKDIR: /usr/lib/jvm/java-12-oracle
+XILINX: /mnt/bigDrive4tb/Vivado/2021.1/ids_lite/ISE
+XILINX_DSP: /mnt/bigDrive4tb/Vivado/2021.1/ids_lite/ISE
+XILINX_HLS: /mnt/bigDrive4tb/Vitis_HLS/2021.1
+XILINX_PLANAHEAD: /mnt/bigDrive4tb/Vivado/2021.1
+XILINX_VITIS: 
+XILINX_VIVADO: /mnt/bigDrive4tb/Vivado/2021.1
+XILINX_VIVADO_HLS: /mnt/bigDrive4tb/Vivado/2021.1
+
+
+GUI allocated memory:	308 MB
+GUI max memory:		3,072 MB
+Engine allocated memory: 1,896 MB
+
+Copyright 1986-2021 Xilinx, Inc. All Rights Reserved.
+
+*/
+
+// TclEventType: START_GUI
+// Tcl Message: start_gui 
+// Tcl Command: 'rdi::info_commands {device::*}'
+// Tcl Command: 'rdi::info_commands {debug::*}'
+// Tcl Command: 'rdi::info_commands {*}'
+// HMemoryUtils.trashcanNow. Engine heap size: 1,892 MB. GUI used memory: 86 MB. Current time: 1/17/24, 3:39:48 PM GMT
+selectList(PAResourceQtoS.SyntheticaGettingStartedView_RECENT_PROJECTS, "/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_Parallel_ZCU9/CPS_Parallel_ZCU9.xpr", 0); // r
+// [GUI Memory]: 108 MB (+111152kb) [00:00:20]
+// [Engine Memory]: 1,895 MB (+1835170kb) [00:00:20]
+// bz (cs):  Open Project : addNotify
+// Opening Vivado Project: /mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_Parallel_ZCU9/CPS_Parallel_ZCU9.xpr. Version: Vivado v2021.1 
+// TclEventType: DEBUG_PROBE_SET_CHANGE
+// TclEventType: FLOW_ADDED
+// Tcl Message: open_project /mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_Parallel_ZCU9/CPS_Parallel_ZCU9.xpr 
+// TclEventType: MSGMGR_MOVEMSG
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: FILE_SET_NEW
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: FILE_SET_NEW
+// TclEventType: RUN_COMPLETED
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_COMPLETED
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_COMPLETED
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_COMPLETED
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_CURRENT
+// TclEventType: MSGMGR_REFRESH_MSG
+// TclEventType: PROJECT_DASHBOARD_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: IP_LOCK_CHANGE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: PROJECT_NEW
+// [GUI Memory]: 126 MB (+12341kb) [00:00:24]
+// [GUI Memory]: 132 MB (+207kb) [00:00:24]
+// [Engine Memory]: 1,993 MB (+3381kb) [00:00:25]
+// WARNING: HEventQueue.dispatchEvent() is taking  2957 ms.
+// Tcl Message: open_project /mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_Parallel_ZCU9/CPS_Parallel_ZCU9.xpr 
+// Tcl Message: Scanning sources... Finished scanning sources 
+// Tcl Message: INFO: [IP_Flow 19-234] Refreshing IP repositories INFO: [IP_Flow 19-1704] No user IP repositories specified INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/mnt/bigDrive4tb/Vivado/2021.1/data/ip'. 
+// HMemoryUtils.trashcanNow. Engine heap size: 2,005 MB. GUI used memory: 97 MB. Current time: 1/17/24, 3:40:05 PM GMT
+// Tcl Message: INFO: [IP_Flow 19-3899] Cannot get the environment domain name variable for the component vendor name. Setting the vendor name to 'user.org'. 
+// Tcl Message: open_project: Time (s): cpu = 00:00:17 ; elapsed = 00:00:06 . Memory (MB): peak = 7665.949 ; gain = 94.219 ; free physical = 26243 ; free virtual = 165387 
+// Project name: CPS_Parallel_ZCU9; location: /mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_Parallel_ZCU9; part: xczu9eg-ffvc900-1-e
+dismissDialog("Open Project"); // bz
+// [GUI Memory]: 139 MB (+827kb) [00:00:29]
+// TclEventType: IP_LOCK_CHANGE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: DG_GRAPH_STALE
+// [Engine Memory]: 2,213 MB (+126092kb) [00:00:35]
+// TclEventType: FILE_SET_CHANGE
+// [GUI Memory]: 147 MB (+191kb) [00:00:41]
+// Tcl Message: update_compile_order -fileset sources_1 
+// Elapsed time: 15 seconds
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Syntax Error Files]", 1, true); // D - Node
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Syntax Error Files]", 1, true, false, false, false, false, true); // D - Double Click - Node
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Syntax Error Files, FSM_Controller_Inc.vhd]", 2, false); // D
+// [GUI Memory]: 161 MB (+6819kb) [00:00:44]
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Syntax Error Files, FSM_Controller_Inc.vhd]", 2, false, false, false, false, false, true); // D - Double Click
+// WARNING: HEventQueue.dispatchEvent() is taking  3355 ms.
+// [GUI Memory]: 177 MB (+8526kb) [00:00:48]
+// HMemoryUtils.trashcanNow. Engine heap size: 2,107 MB. GUI used memory: 117 MB. Current time: 1/17/24, 3:40:26 PM GMT
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Syntax Error Files, FSM_Controller_Inc.vhd]", 2, false); // D
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Syntax Error Files, FSM_Controller_Inc.vhd]", 2, false, false, false, false, false, true); // D - Double Click
+selectTab(PAResourceEtoH.FileSetView_TABBED_PANE, (HResource) null, "Libraries", 2); // i
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, VHDL, xil_defaultlib, CM_FSM.vhd]", 3, false); // D
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, VHDL, xil_defaultlib, Instruction_Controller.vhd]", 5, false); // D
+selectButton(PAResourceOtoP.PlanAheadTab_REFRESH_CHANGED_MODULES, "Refresh Changed Modules"); // h
+// TclEventType: IP_LOCK_CHANGE
+// bz (cs):  Refresh Changed Modules : addNotify
+// Tcl Message: update_module_reference design_1_top_0_0 
+// TclEventType: PACKAGER_OBJECT_ADD
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: BDCELL_LOCK_CHANGE
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: LOAD_FEATURE
+// Tcl Message: INFO: [IP_Flow 19-234] Refreshing IP repositories INFO: [IP_Flow 19-1704] No user IP repositories specified 
+// Tcl Message: Reading block design file </mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_Parallel_ZCU9/CPS_Parallel_ZCU9.srcs/sources_1/bd/design_1/design_1.bd>... 
+// TclEventType: RSB_CHANGE_CURRENT_DIAGRAM
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: LOAD_FEATURE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: RSB_PROPERTY_CHANGE
+// Tcl Message: Adding component instance block -- xilinx.com:ip:zynq_ultra_ps_e:3.3 - zynq_ultra_ps_e_0 
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: RSB_PROPERTY_CHANGE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: RSB_LOCK_CHANGE
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: RSB_OPEN_DIAGRAM
+// WARNING: HEventQueue.dispatchEvent() is taking  1346 ms.
+// TclEventType: RSB_OPEN_DIAGRAM
+// JavaFX intialization before: 1705506048672
+// Tcl Message: Adding component instance block -- xilinx.com:ip:clk_wiz:6.0 - clk_wiz_0 Adding component instance block -- xilinx.com:ip:clk_wiz:6.0 - clk_wiz_1 Adding component instance block -- xilinx.com:ip:clk_wiz:6.0 - clk_wiz_2 Adding component instance block -- xilinx.com:module_ref:top:1.0 - top_0 Successfully read diagram <design_1> from block design file </mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_Parallel_ZCU9/CPS_Parallel_ZCU9.srcs/sources_1/bd/design_1/design_1.bd> 
+// JavaFX initialization after: 1705506048930
+closeView(PAResourceOtoP.PAViews_PROJECT_SUMMARY, "Project Summary"); // v
+// HMemoryUtils.trashcanNow. Engine heap size: 2,183 MB. GUI used memory: 123 MB. Current time: 1/17/24, 3:40:49 PM GMT
+// TclEventType: RSB_OPEN_DIAGRAM
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: RSB_REMOVE_OBJECT
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: RSB_SAVE_DIAGRAM
+// Tcl Message: Upgrading '/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_Parallel_ZCU9/CPS_Parallel_ZCU9.srcs/sources_1/bd/design_1/design_1.bd' 
+// Tcl Message: INFO: [IP_Flow 19-1972] Upgraded design_1_top_0_0 from top_v1_0 1.0 to top_v1_0 1.0 
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: RSB_SAVE_DIAGRAM
+// TclEventType: FILESET_UPDATE_IP
+// TclEventType: IP_UPGRADE_COMPLETE
+// Tcl Message: Wrote  : </mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_Parallel_ZCU9/CPS_Parallel_ZCU9.srcs/sources_1/bd/design_1/design_1.bd>  
+// Tcl Message: update_module_reference: Time (s): cpu = 00:00:15 ; elapsed = 00:00:05 . Memory (MB): peak = 9109.086 ; gain = 1229.387 ; free physical = 24467 ; free virtual = 163621 
+// Tcl Message: ERROR: [Common 17-39] 'update_module_reference' failed due to earlier errors. 
+// CommandFailedException: ERROR: [Common 17-69] Command failed: ERROR: [Common 17-39] 'update_module_reference' failed due to earlier errors.  
+// a (cs): Critical Messages: addNotify
+dismissDialog("Refresh Changed Modules"); // bz
+selectButton(PAResourceAtoD.CmdMsgDialog_OK, "OK"); // f
+dismissDialog("Critical Messages"); // a
+// [Engine Memory]: 2,329 MB (+6429kb) [00:01:12]
+// [Engine Memory]: 2,491 MB (+47070kb) [00:01:13]
+// [GUI Memory]: 191 MB (+5781kb) [00:01:13]
+selectTab("PlanAheadTabBaseWorkspace_JideTabbedPane", (HResource) null, "FSM_Controller_Inc.vhd", 1); // m
+// Elapsed time: 18 seconds
+selectCodeEditor("FSM_Controller_Inc.vhd", 173, 297); // bP
+selectCodeEditor("FSM_Controller_Inc.vhd", 173, 297, false, false, false, false, true); // bP - Double Click
+// Elapsed time: 133 seconds
+selectCodeEditor("FSM_Controller_Inc.vhd", 390, 258); // bP
+selectCodeEditor("FSM_Controller_Inc.vhd", 390, 258, false, false, false, false, true); // bP - Double Click
+selectCodeEditor("FSM_Controller_Inc.vhd", 301, 422); // bP
+// Elapsed time: 29 seconds
+selectCodeEditor("FSM_Controller_Inc.vhd", 248, 264); // bP
+selectCodeEditor("FSM_Controller_Inc.vhd", 240, 277); // bP
+selectCodeEditor("FSM_Controller_Inc.vhd", 234, 304); // bP
+selectCodeEditor("FSM_Controller_Inc.vhd", 229, 317); // bP
+selectCodeEditor("FSM_Controller_Inc.vhd", 230, 327); // bP
+selectCodeEditor("FSM_Controller_Inc.vhd", 404, 451); // bP
+// TclEventType: IP_LOCK_CHANGE
+// TclEventType: REPORT_IP_STATUS_STALE
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Elapsed time: 13 seconds
+selectButton(PAResourceOtoP.PlanAheadTab_REFRESH_CHANGED_MODULES, "Refresh Changed Modules"); // h
+// TclEventType: IP_LOCK_CHANGE
+// Tcl Message: update_module_reference design_1_top_0_0 
+// bz (cs):  Refresh Changed Modules : addNotify
+// TclEventType: PACKAGER_OBJECT_ADD
+// TclEventType: PACKAGER_MESSAGE_RESET
+// TclEventType: BDCELL_LOCK_CHANGE
+// TclEventType: RSB_OPEN_DIAGRAM
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: RSB_REMOVE_OBJECT
+// TclEventType: RSB_SCRIPT_TASK
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: RSB_SAVE_DIAGRAM
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: RSB_SAVE_DIAGRAM
+// TclEventType: FILESET_UPDATE_IP
+// TclEventType: IP_UPGRADE_COMPLETE
+// Tcl Message: INFO: [IP_Flow 19-234] Refreshing IP repositories INFO: [IP_Flow 19-1704] No user IP repositories specified 
+// Tcl Message: Upgrading '/mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_Parallel_ZCU9/CPS_Parallel_ZCU9.srcs/sources_1/bd/design_1/design_1.bd' 
+// Tcl Message: INFO: [IP_Flow 19-1972] Upgraded design_1_top_0_0 from top_v1_0 1.0 to top_v1_0 1.0 
+// Tcl Message: Wrote  : </mnt/bigDrive4tb/bardia/FPGA_Projects/CPS_Parallel_ZCU9/CPS_Parallel_ZCU9.srcs/sources_1/bd/design_1/design_1.bd>  
+dismissDialog("Refresh Changed Modules"); // bz
+// [GUI Memory]: 219 MB (+19703kb) [00:04:47]
