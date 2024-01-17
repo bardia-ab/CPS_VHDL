@@ -60,6 +60,10 @@ architecture behavioral of FSM is
 	signal	r_LED1			:	std_logic;
 	signal	r_LED2			:	std_logic;
 	
+--	attribute DONT_TOUCH	:	string;
+--	attribute DONT_TOUCH of FSM_Controller_Inc_Inst	:	label is "True";
+
+	
 begin
 		
 	CUT_FSM_Inst	:	entity work.CUT_FSM
@@ -110,7 +114,7 @@ begin
 	)
 	port map(
 		i_Reset			=>	i_Reset,
-		i_Psclk1		=>	i_Psclk1,
+		i_Clk			=>	i_Psclk1,
 		i_Locked1		=>	i_Locked1,
 		i_Locked2		=>	i_Locked2,
 		i_Locked3		=>	i_Locked3,
@@ -125,8 +129,8 @@ begin
 		o_En_CUT		=>	r_En_CUT,
 		o_En_CM1		=>	r_En_CM1,
 		o_En_CM2		=>	r_En_CM2,
-		o_Shift_Value	=>	o_Shift_Value,
-		o_Slct_Mux		=>	o_Slct_Mux,
+		o_Shift_Index	=>	o_Shift_Value,
+		o_Segment_Index		=>	o_Slct_Mux,
 		o_LED1			=>	r_LED1,
 		o_LED2			=>	r_LED2
 	);
